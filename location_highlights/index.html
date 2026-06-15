@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Location_Highlights</title>
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/main.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-compass/dist/leaflet-compass.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/js/fontawesome.min.js"></script>
+    <style>
+        .compass {
+            position: absolute;
+            bottom: 76%;
+            right: 1%;
+            width: 80px;
+            height: 80px;
+            background-image: url(images/compass-icon.png);
+            background-size: cover;
+            z-index: 1001;
+        }
+    </style>
+
+</head>
+
+<body>
+    <img id="logo" src="images/prizmabrixx.png" alt="Logo">
+    <div id="map"></div>
+    <!-- Toggle Minimize/Maximize Button Outside the Card -->
+    <button id="toggle-card-btn" onclick="toggleCardVisibility()"><i class="fa-solid fa-plus fa-xl"></i></button>
+
+    <div id="poi-card">
+        <div id="poi-card-header">
+            <div>
+                <button class="minimize-btn" onclick="toggleIcons()">Place of Interest</button>
+            </div>
+            <div id="button-container">
+                <button class="minimize-btn" onclick="toggleSlider()">Select Radius</button>
+            </div>
+        </div>
+        <div id="slider-container" style="display: none; margin-top: 10px;">
+            <input type="range" id="slider" min="0" max="20" step="5" value="20">
+            <span id="slider-value">20 km</span>
+        </div>
+        <div id="poi-card-content">
+            <div id="poi-list"></div>
+        </div>
+        <div id="icon-buttons" style="display: none;">
+            <button class="icon-btn" onclick="updatePOIs('all')"><i class="fa fa-globe"></i></button>
+            <button class="icon-btn" onclick="updatePOIs('entertainment')"><i class="fa fa-film"></i></button>
+            <button class="icon-btn" onclick="updatePOIs('institutions')"><i class="fa fa-school"></i></button>
+            <button class="icon-btn" onclick="updatePOIs('connectivity')"><i class="fa fa-bus"></i></button>
+            <button class="icon-btn" onclick="updatePOIs('hospitals')"><i class="fa fa-hospital"></i></button>
+            <button class="icon-btn" onclick="updatePOIs('work_places')"><i class="fa fa-briefcase"></i></button>
+        </div>
+    </div>
+    <div class="compass" id="compass">
+        <i id="back-icon" class="fas fa-arrow-left"></i>
+    </div>
+
+
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
+    <script src="js/script.js"></script>
+
+</body>
+
+</html>

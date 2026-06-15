@@ -1,0 +1,135 @@
+@media only screen and (min-width:320px) and (max-width:645px){
+    #slider-value{
+        font-size: 10px;
+    }
+
+    #slider{
+        width: 71%;
+        height: 4px;
+    }
+
+    .set{
+        font-size: 10px;
+    }
+
+    .minimize-btn {
+        font-size: 9px !important;
+        margin-right: -10px;
+        margin-top: 4%;
+    }
+
+    .icon-btn {
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        font-size: 10px !important;
+        margin: 5px;
+        color: #fff;
+    }
+
+    .poi-item {
+        display: flex;
+        cursor: pointer;
+        padding: 10px;
+        border-bottom: 1px solid #fff;
+        justify-content: center;
+        position: relative;
+        top: 0px !important;
+        font-size: 10px;
+    }
+
+    #poi-card{
+        width: 174px !important;
+        padding: 10px !important;
+        position: absolute;
+        top: 49% !important;
+        right: 20px;
+        height: 43%;
+    }
+
+    #poi-list{
+        height: 130px;
+        margin-top: -4%;
+    }
+
+    #poi-type{
+        width: 78px !important;
+        font-size: 10px !important;
+    }
+
+    .drop{
+        font-size: 10px !important;
+        height: fit-content !important;
+    }
+
+    #logo {
+        position: absolute;
+        top: 1px;
+        left: 12px !important;
+        width: 67px !important;
+        height: auto;
+        z-index: 1001;
+    }
+    #slider-container {
+        display: none;
+        margin-top: 10px;
+        margin-top: 40px !important;
+        transition: margin-top 0.3s ease;
+    }
+    #poi-card-content {
+        display: flex;
+        margin-top: 24px !important;
+        max-height: 300px;
+        overflow-y: auto;
+        scrollbar-width: thin;
+        scrollbar-color: transparent transparent;
+        justify-content: center;
+        flex-direction: row;
+    }
+
+    button#toggle-card-btn {
+        position: fixed;
+        bottom: 54% !important;
+        left: 64% !important;
+        z-index: 10000;
+        transition: transform 0.8s ease, right 0.8s ease;
+    }
+
+    #poi-card.hidden {
+        transform: translateY(110%) !important; 
+    }
+
+    button#toggle-card-btn.hidden {
+        transform: translateY(205px) !important; 
+    }
+    div#icon-buttons {
+        position: fixed;
+        top: 55% !important;
+    }
+
+    .compass {
+        position: absolute;
+        bottom: 63% !important;
+        right: 2% !important;
+        z-index: 1001;
+        width: 70px !important;
+        height: 70px !important;
+    }
+
+    #back-icon {
+        background-color: rgba(39, 24, 19, 0.76);
+        border-radius: 50%;
+        width: 40px !important;
+        height: 40px !important;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-left: 16px;
+        margin-top: -68%;
+        cursor: pointer;
+        color: #fff;
+        transition: transform 0.3s ease-in-out;
+    }
+
+    
+}

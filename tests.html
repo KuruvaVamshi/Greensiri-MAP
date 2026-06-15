@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Shapes Hover Coordinates</title>
+  <link rel="stylesheet" />
+  <style>
+    body {
+      font-family: Arial;
+      padding: 30px;
+    }
+
+    #container {
+      display: flex;
+      gap: 30px;
+    }
+
+    .box {
+      width: 150px;
+      height: 150px;
+      border: 2px solid black;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .shape {
+      width: 80px;
+      height: 80px;
+      cursor: pointer;
+    }
+
+    .circle {
+      border-radius: 50%;
+      background: dodgerblue;
+    }
+
+    .square {
+      background: green;
+    }
+
+    .triangle {
+      width: 0;
+      height: 0;
+      border-left: 40px solid transparent;
+      border-right: 40px solid transparent;
+      border-bottom: 80px solid orange;
+    }
+
+    .star {
+      background: gold;
+      clip-path: polygon(50% 0%,
+          61% 35%,
+          98% 35%,
+          68% 57%,
+          79% 91%,
+          50% 70%,
+          21% 91%,
+          32% 57%,
+          2% 35%,
+          39% 35%);
+    }
+
+    .coords {
+      position: absolute;
+      bottom: -25px;
+      background: black;
+      color: white;
+      font-size: 12px;
+      padding: 3px 6px;
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="container"></div>
+
+  <script src="script.js"></script>
+</body>
+
+</html>

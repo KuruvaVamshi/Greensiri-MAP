@@ -1,0 +1,684 @@
+@media screen and (max-width: 850px) {
+    body {
+        font-weight: lighter !important;
+    }
+
+    .compass {
+        width: 20px !important;
+    }
+
+    .threebtns img {
+        width: 20px !important;
+    }
+
+    .threebtns {
+        right: 1% !important;
+        bottom: 4% !important;
+    }
+
+    .plot-panel {
+        right: 50%;
+        top: 50%;
+        transform: translate(50%, -50%);
+        /* center it */
+        width: 90vw;
+    }
+
+    .card-container {
+        right: 12% !important;
+        top: 40% !important;
+        width: 45% !important;
+        padding: 7px !important;
+        border-radius: 19px !important;
+    }
+
+    #info-card {
+        bottom: 2% !important;
+        width: 35% !important;
+        padding: 10px !important;
+        z-index: 10 !important;
+        border-radius: 6px !important;
+    }
+
+    h1 {
+        font-size: 9px !important;
+        margin-bottom: 8px !important;
+        font-weight: 100 !important;
+        display: flex !important;
+        justify-content: center !important;
+    }
+
+    .orientation-buttons {
+        margin-bottom: 14px !important;
+    }
+
+    .orientation-buttons button {
+        font-size: 12px !important;
+    }
+
+    #corner-plots-button {
+        width: 39% !important;
+        font-size: 12px !important;
+    }
+
+    .slider-section {
+        width: 100% !important;
+        margin: 0px auto !important;
+    }
+
+    .slider-section h2 {
+        font-size: 13px !important;
+        margin: 7px 0px 0px 0px !important;
+        font-weight: 100 !important;
+        DISPLAY: flex !important;
+        justify-content: center !important;
+    }
+
+    .slider {
+        height: 1px !important;
+    }
+
+    .slider-section .slider-value {
+        font-size: 11px !important;
+    }
+
+    .amenities-section,
+    .availability-section {
+        font-size: 8px !important;
+    }
+
+    .amenities-section h2,
+    .availability-section h2 {
+        font-weight: 100 !important;
+        margin: 4px auto !important;
+        display: flex !important;
+        justify-content: center !important;
+        margin-top: auto !important;
+    }
+
+    .amenities-buttons button,
+    .availability-buttons button {
+        margin: 0px 4px 5px 1px !important;
+        font-size: 9px !important;
+        width: 30% !important;
+        padding: 5px !important;
+    }
+
+
+    #info-card {
+        bottom: 2% !important;
+        width: 25% !important;
+        padding: 10px !important;
+        z-index: 10 !important;
+    }
+
+    .card-body h4 {
+        font-size: 9px !important;
+        font-weight: 100 !important;
+        margin: 10px auto !important;
+    }
+
+    #compareModal h2 {
+        font-size: 10px !important;
+        font-weight: lighter !important;
+        bottom: 19% !important;
+    }
+
+    #plot-info strong {
+        padding: 1px 0px !important;
+        display: inline-block !important;
+        font-weight: 100 !important;
+        font-size: 8px !important;
+    }
+
+    #info-card #plot-info {
+        font-size: 12px !important;
+        padding: 1px 0px 0px 0px !important;
+    }
+
+    #addBtn img {
+        width: 25px !important;
+    }
+
+    #addBtn p {
+        font-size: 8px !important;
+    }
+
+    #view img,
+    .button img {
+        width: 29px !important;
+    }
+
+    .button p,
+    .buttons5 p {
+        font-size: 5px !important;
+        font-weight: 100 !important;
+        letter-spacing: 1px !important;
+    }
+
+    .button-container {
+        margin: 0px auto !important;
+    }
+
+    .plot-data-value {
+        font-size: 10px !important;
+    }
+
+    .compared-plot.card {
+        height: 89px !important;
+        font-size: 9px !important;
+        padding: 10px !important;
+    }
+
+    .fa-plus-circle {
+        font-size: 27px !important;
+        left: 24px !important;
+        top: 31px !important;
+    }
+
+    #compareModal {
+        top: 59% !important;
+        left: 56% !important;
+        width: 47% !important;
+        height: 38% !important;
+        padding: 16px !important;
+    }
+
+    .row-wrapper img {
+        display: none !important;
+    }
+
+    .compared-plot.card p {
+        margin: 3px auto !important;
+    }
+
+    .compared-plot button {
+        margin-top: 5px !important;
+        padding: 0px 7px !important;
+    }
+
+    .alert-content {
+        margin: 13% auto !important;
+        padding: 8px !important;
+        width: 36% !important;
+        top: 53% !important;
+        left: 30% !important;
+        font-size: 10px !important;
+        font-weight: lighter !important;
+    }
+
+    .tooltip-text {
+        display: none;
+    }
+
+    #minimize-btn {
+        width: 12% !important;
+        height: 8% !important;
+    }
+
+    #central-tooltip {
+        display: none;
+    }
+
+    .center-line {
+        display: none;
+    }
+
+    #polytooltip {
+        display: none;
+    }
+
+    #firsttooltip {
+        display: none !important;
+    }
+
+
+}
+
+/* ============================================================ */
+/* MOBILE OPTIMIZATION (BASED ON SKETCH) */
+/* Stack: Plot Details -> Map -> Buttons */
+/* ============================================================ */
+@media screen and (max-width: 850px) {
+    body {
+        font-weight: lighter !important;
+    }
+
+    .compass {
+        width: 20px !important;
+    }
+
+    .threebtns img {
+        width: 20px !important;
+    }
+
+    .threebtns {
+        right: 1% !important;
+        bottom: 4% !important;
+    }
+
+    .plot-panel {
+        right: 50%;
+        top: 50%;
+        transform: translate(50%, -50%);
+        /* center it */
+        width: 90vw;
+    }
+
+    .card-container {
+        right: 12% !important;
+        top: 40% !important;
+        width: 45% !important;
+        padding: 7px !important;
+        border-radius: 19px !important;
+    }
+
+    #info-card {
+        bottom: 2% !important;
+        width: 35% !important;
+        padding: 10px !important;
+        z-index: 10 !important;
+        border-radius: 6px !important;
+    }
+
+    h1 {
+        font-size: 9px !important;
+        margin-bottom: 8px !important;
+        font-weight: 100 !important;
+        display: flex !important;
+        justify-content: center !important;
+    }
+
+    .orientation-buttons {
+        margin-bottom: 14px !important;
+    }
+
+    .orientation-buttons button {
+        font-size: 12px !important;
+    }
+
+    #corner-plots-button {
+        width: 39% !important;
+        font-size: 12px !important;
+    }
+
+    .slider-section {
+        width: 100% !important;
+        margin: 0px auto !important;
+    }
+
+    .slider-section h2 {
+        font-size: 13px !important;
+        margin: 7px 0px 0px 0px !important;
+        font-weight: 100 !important;
+        DISPLAY: flex !important;
+        justify-content: center !important;
+    }
+
+    .slider {
+        height: 1px !important;
+    }
+
+    .slider-section .slider-value {
+        font-size: 11px !important;
+    }
+
+    .amenities-section,
+    .availability-section {
+        font-size: 8px !important;
+    }
+
+    .amenities-section h2,
+    .availability-section h2 {
+        font-weight: 100 !important;
+        margin: 4px auto !important;
+        display: flex !important;
+        justify-content: center !important;
+        margin-top: auto !important;
+    }
+
+    .amenities-buttons button,
+    .availability-buttons button {
+        margin: 0px 4px 5px 1px !important;
+        font-size: 9px !important;
+        width: 30% !important;
+        padding: 5px !important;
+    }
+
+
+    #info-card {
+        bottom: 2% !important;
+        width: 25% !important;
+        padding: 10px !important;
+        z-index: 10 !important;
+    }
+
+    .card-body h4 {
+        font-size: 9px !important;
+        font-weight: 100 !important;
+        margin: 10px auto !important;
+    }
+
+    #compareModal h2 {
+        font-size: 10px !important;
+        font-weight: lighter !important;
+        bottom: 19% !important;
+    }
+
+    #plot-info strong {
+        padding: 1px 0px !important;
+        display: inline-block !important;
+        font-weight: 100 !important;
+        font-size: 8px !important;
+    }
+
+    #info-card #plot-info {
+        font-size: 12px !important;
+        padding: 1px 0px 0px 0px !important;
+    }
+
+    #addBtn img {
+        width: 25px !important;
+    }
+
+    #addBtn p {
+        font-size: 8px !important;
+    }
+
+    #view img,
+    .button img {
+        width: 29px !important;
+    }
+
+    .button p,
+    .buttons5 p {
+        font-size: 5px !important;
+        font-weight: 100 !important;
+        letter-spacing: 1px !important;
+    }
+
+    .button-container {
+        margin: 0px auto !important;
+    }
+
+    .plot-data-value {
+        font-size: 10px !important;
+    }
+
+    .compared-plot.card {
+        height: 89px !important;
+        font-size: 9px !important;
+        padding: 10px !important;
+    }
+
+    .fa-plus-circle {
+        font-size: 27px !important;
+        left: 24px !important;
+        top: 31px !important;
+    }
+
+    #compareModal {
+        top: 59% !important;
+        left: 56% !important;
+        width: 47% !important;
+        height: 38% !important;
+        padding: 16px !important;
+    }
+
+    .row-wrapper img {
+        display: none !important;
+    }
+
+    .compared-plot.card p {
+        margin: 3px auto !important;
+    }
+
+    .compared-plot button {
+        margin-top: 5px !important;
+        padding: 0px 7px !important;
+    }
+
+    .alert-content {
+        margin: 13% auto !important;
+        padding: 8px !important;
+        width: 36% !important;
+        top: 53% !important;
+        left: 30% !important;
+        font-size: 10px !important;
+        font-weight: lighter !important;
+    }
+
+    .tooltip-text {
+        display: none;
+    }
+
+    #minimize-btn {
+        width: 12% !important;
+        height: 8% !important;
+    }
+
+    #central-tooltip {
+        display: none;
+    }
+
+    .center-line {
+        display: none;
+    }
+
+    #polytooltip {
+        display: none;
+    }
+
+    #firsttooltip {
+        display: none !important;
+    }
+
+
+}
+
+/* ============================================================ */
+/* MOBILE OPTIMIZATION (BASED ON SKETCH) */
+/* Stack: Plot Details -> Map -> Buttons */
+/* ============================================================ */
+@media screen and (max-width: 600px) {
+    .firsttop {
+        display: flex !important;
+        flex-direction: column !important;
+        min-height: 100dvh;
+        /* modern iOS fix */
+        min-height: 100svh;
+        /* fallback */
+        min-height: -webkit-fill-available;
+        /* older iOS */
+        height: auto;
+        overflow-y: auto !important;
+        position: relative !important;
+        width: 100vw !important;
+        background: #D5CFD1 !important;
+    }
+
+    /* 1. PLOT DETAILS AT TOP */
+    #plot-info-panel,
+    .plot-info-panel {
+        order: 1 !important;
+        position: relative !important;
+        width: 100% !important;
+        top: 0 !important;
+        right: 0 !important;
+        left: 0 !important;
+        bottom: auto !important;
+        padding: 20px !important;
+        background: transparent !important;
+        box-shadow: none !important;
+        display: block !important;
+        margin: 0 !important;
+
+    }
+
+    .panel-header h3 {
+        font-size: 18px !important;
+        margin-bottom: 20px !important;
+        color: #5b5a2f !important;
+        border-bottom: 2px solid #5b5a2f !important;
+        padding-bottom: 5px !important;
+        display: inline-block !important;
+    }
+
+    .panel-row {
+        margin-bottom: 10px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+    }
+
+    .panel-row .label {
+        font-size: 10px !important;
+        letter-spacing: 1.5px !important;
+        color: #5b5a2f !important;
+        min-width: 120px !important;
+        margin-left: 20px;
+    }
+
+    .panel-row .value {
+        font-size: 10px !important;
+
+        color: #5b5a2f !important;
+        text-align: right !important;
+        margin-right: 20px;
+    }
+
+    .panel-row .line {
+        flex: 1 !important;
+        height: 1px !important;
+        background: #5b5a2f !important;
+        margin: 0 15px !important;
+        opacity: 0.2 !important;
+        display: block !important;
+    }
+
+    /* Plot Diagram (N, S, W, E) */
+    .plot-diagram {
+        position: relative !important;
+        left: auto !important;
+        top: auto !important;
+        right: auto !important;
+        bottom: 50px !important;
+        margin: 40px auto 20px auto !important;
+        width: 80px !important;
+        height: 80px !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+    }
+
+    .plot-box {
+        width: 40px !important;
+        height: 40px !important;
+        border: 2px solid #5b5a2f !important;
+        background: #D5CFD1 !important;
+    }
+
+    .plot-label {
+        font-size: 12px !important;
+        color: #5b5a2f !important;
+        white-space: nowrap !important;
+    }
+
+    .north {
+        top: 20px !important;
+        left: 70% !important;
+        transform: translate(5px, -98%) !important;
+    }
+
+    .south {
+        bottom: -30px !important;
+        left: 50% !important;
+        transform: translate(-33px, -38%) !important;
+    }
+
+    .west {
+        left: -80px !important;
+        top: 50% !important;
+
+        transform: translate(35px, -145%) !important;
+    }
+
+    .east {
+        right: -50px !important;
+        top: 30% !important;
+        transform: translate(5px, -78%) !important;
+    }
+
+    /* 2. MAP (VIRTUAL LAYOUT) BELOW DETAILS */
+    .image-container {
+        order: 2 !important;
+        position: relative !important;
+        width: 100% !important;
+        height: 50vh !important;
+        background-color: #D5CFD1 !important;
+        bottom: 150px !important;
+    }
+
+    #layout-image {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: contain !important;
+    }
+
+    #svg-map {
+        width: 100% !important;
+        height: 100% !important;
+    }
+
+    /* Vertical "VIRTUAL LAYOUT" label */
+
+
+    /* 3. BUTTONS AT BOTTOM */
+    .filter-btn,
+    .view-compare-btn {
+        position: relative !important;
+        bottom: 220px !important;
+        height: 40px;
+        right: auto !important;
+        left: auto !important;
+        width: 85% !important;
+        margin: 10px auto !important;
+        display: block !important;
+        order: 3 !important;
+        padding: 15px !important;
+        text-align: center !important;
+        border-radius: 12px !important;
+        font-size: 15px !important;
+        font-weight: 600 !important;
+    }
+
+    .compare-btn {
+        display: flex !important;
+        /* ✅ better than block */
+        align-items: center;
+        justify-content: center;
+
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        position: relative !important;
+        bottom: 70px !important;
+        height: 40px;
+        right: auto !important;
+        left: auto !important;
+        width: 95% !important;
+        margin: 10px auto !important;
+        display: block !important;
+        white-space: nowrap;
+        order: 3 !important;
+        padding: 10px !important;
+        text-align: center !important;
+        border-radius: 12px !important;
+        font-size: 15px !important;
+        font-weight: 600 !important;
+    }
+
+    #mobile-info-slot {
+        display: none !important;
+    }
+}

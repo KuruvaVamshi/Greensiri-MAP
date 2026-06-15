@@ -1,0 +1,5302 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <link rel="stylesheet" href="https://use.typekit.net/oov2wcw.css" />
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Sofia" />
+  <title>OPEN_PLOTS</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="responsive.css" />
+
+  <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+  <style>
+    .plot-size-row {
+      align-items: flex-start;
+    }
+
+    .plot-diagram {
+      position: relative;
+      width: 50px;
+      height: 50px;
+      margin: 40px auto 40px auto;
+    }
+
+    .plot-box {
+      width: 100%;
+      height: 100%;
+      border: 2px solid #5b5a2f;
+      border-radius: 6px;
+    }
+
+    .plot-label {
+      position: absolute;
+      color: #5b5a2f;
+      font-size: 14px;
+      font-weight: 200;
+      white-space: nowrap;
+    }
+
+    .labell {
+      font-size: 14px;
+      letter-spacing: 2px;
+      position: relative;
+      margin-top: 10%;
+    }
+
+    /* Positioning */
+    .north {
+      top: -30px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .south {
+      bottom: -30px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .west {
+      left: -55px;
+      top: 50%;
+      transform: translateY(-50%);
+      text-align: right;
+    }
+
+    .east {
+      right: -55px;
+      top: 50%;
+      transform: translateY(-50%);
+      text-align: left;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="firsttop">
+    <div class="image-container">
+      <img src="images/avalability tool ui.jpg" id="layout-image" alt="Layout" />
+
+      <svg id="svg-map"></svg>
+    </div>
+
+    <div id="plot-info-panel" class="plot-info-panel">
+      <div class="plot-diagram panel-row plot-size-row info-sizes" id="info-sizes"></div>
+      <div class="panel-header">
+        <h3>PLOT DETAILS</h3>
+      </div>
+      <span class="line"></span>
+      <div class="panel-row">
+        <span class="label">PLOT NUMBER</span>
+        <span class="value info-plot-number" id="info-plot-number">—</span>
+      </div>
+      <span class="line"></span>
+      <div class="panel-row">
+        <span class="label">PLOT AREA</span>
+
+        <span class="value info-area" id="info-area">—</span>
+      </div>
+      <span class="line"></span>
+      <div class="panel-row">
+        <span class="label">PLOT ORIENTATION</span>
+
+        <span class="value info-facing" id="info-facing">—</span>
+      </div>
+      <span class="line"></span>
+
+      <div class="panel-row">
+        <span class="label">PLOT TYPE</span>
+        <span class="value info-type" id="info-type">—</span>
+      </div>
+
+      <button id="add-compare-btn" class="compare-btn">
+        Add to Compare (
+        <span id="compare-count">0</span>
+        )
+      </button>
+    </div>
+    <button id="view-compare-btn" class="view-compare-btn" disabled>View Compared Plots</button>
+
+    <!-- filter options -->
+    <!-- =========================
+     FILTER MODAL
+     ========================= -->
+    <button id="filter-btn" class="filter-btn">Filter</button>
+    <div id="filter-modal">
+      <div class="filter-overlay"></div>
+
+      <div class="filter-dialog">
+        <!-- FILTER CONTENT -->
+        <div class="filter-header">
+          <h3>Filter Plots</h3>
+          <button id="close-filter">✕</button>
+        </div>
+
+        <div class="filter-body">
+          <!-- Facing -->
+          <div class="filter-group">
+            <label>Facing</label>
+            <select id="filter-facing">
+              <option value="">All</option>
+              <option value="east">east</option>
+              <option value="west">west</option>
+              <option value="north">north</option>
+              <option value="south">south</option>
+              <option value="northwest">northwest</option>
+              <option value="northeast">northeast</option>
+              <option value="southwest">southwest</option>
+              <option value="southeast">southeast</option>
+            </select>
+          </div>
+
+          <!-- Type -->
+          <div class="filter-group">
+            <label>PLC Type</label>
+            <select id="filter-type">
+              <option value="">All</option>
+              <option value="normal">Normal</option>
+              <option value="corner">Corner</option>
+              <option value="waterstream">Water Stream</option>
+              <option value="corner waterstream">Corner Water Stream</option>
+              <option value="special_package">Special Package</option>
+            </select>
+          </div>
+
+          <!-- Amenities -->
+          <div class="filter-group">
+            <label>Amenities</label>
+            <select id="filter-amenities">
+              <option value="">All</option>
+              <option value="park">Park</option>
+              <option value="clubhouse">Clubhouse</option>
+            </select>
+          </div>
+
+          <!-- Size -->
+          <!-- <div class="filter-group">
+              <label>Plot Size (sqft)</label>
+              <input type="range" id="filter-size" min="500" max="5000" step="100" value="5000" />
+              <div id="size-value">Up to 5000 sqft</div>
+            </div> -->
+        </div>
+
+        <div class="filter-footer">
+          <button id="reset-filter">Reset</button>
+          <button id="apply-filter">Apply</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MOBILE INFO SLOT -->
+    <div id="mobile-info-slot">
+      <div id="plot-info-panel" class="plot-info-panel">
+        <div class="panel-header">
+          <h3>PLOT DETAILS</h3>
+        </div>
+
+        <div class="panel-row">
+          <span class="label">PLOT NUMBER</span>
+          <span class="line"></span>
+          <span class="value info-plot-number" id="mobile-info-plot-number">—</span>
+        </div>
+
+        <div class="panel-row">
+          <span class="label">PLOT SIZES</span>
+          <span class="line"></span>
+          <span class="value info-sizes" id="mobile-info-sizes">—</span>
+        </div>
+
+        <div class="panel-row">
+          <span class="label">PLOT AREA</span>
+          <span class="line"></span>
+          <span class="value info-area" id="mobile-info-area">—</span>
+        </div>
+
+        <div class="panel-row">
+          <span class="label">PLOT ORIENTATION</span>
+          <span class="line"></span>
+          <span class="value info-facing" id="mobile-info-facing">—</span>
+        </div>
+
+        <div class="panel-row">
+          <span class="label">PLACE TYPE</span>
+          <span class="line"></span>
+          <span class="value info-type" id="mobile-info-type">—</span>
+        </div>
+
+
+      </div>
+    </div>
+    <!-- =========================
+     COMPARE MODAL
+     ========================= -->
+    <div id="compare-modal" class="compare-modal">
+      <div class="compare-overlay"></div>
+
+      <div class="compare-dialog">
+        <div class="compare-header">
+          <h3>Compare Plots</h3>
+          <div style="display:flex;gap:10px;align-items:center">
+            <button id="reset-compare" class="reset-compare-btn">Reset All</button>
+            <button id="close-compare">✕</button>
+          </div>
+        </div>
+
+        <div id="compare-content" class="compare-content">
+          <!-- dynamic cards injected by JS -->
+        </div>
+      </div>
+    </div>
+
+    <div id="central-tooltip" class="central-tooltip"></div>
+
+    <p id="center-line" class="center-line"></p>
+    <!-- plot info card -->
+    <div id="plot-hover-tooltip"></div>
+  </div>
+  <script>
+    const svgContainer = document.getElementById("svg-map");
+    const polygonsData = [
+      //right first section
+      {
+        coordinates: [
+          // left bottom
+          { x: 2580, y: 523 },
+          // right bottom
+          { x: 2680, y: 523 },
+          // right top
+          { x: 2711, y: 370 },
+          // left top
+          { x: 2580, y: 370 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "1",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "1",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 2485, y: 523 },
+          // right bottom
+          { x: 2579.5, y: 523 },
+          // right top
+          { x: 2579.5, y: 370 },
+          // left top
+          { x: 2485, y: 370 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "2A",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "2A",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 2390, y: 523 },
+          // right bottom
+          { x: 2484.5, y: 523 },
+          // right top
+          { x: 2485, y: 370 },
+          // left top
+          { x: 2390, y: 370 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "2B",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "2B",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 2485, y: 703 },
+          // right bottom
+          { x: 2576, y: 703 },
+          // right top
+          { x: 2576, y: 560 },
+          // left top
+          { x: 2485, y: 560 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "3A",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "3A",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 2387, y: 703 },
+          // right bottom
+          { x: 2485, y: 703 },
+          // right top
+          { x: 2485, y: 560 },
+          // left top
+          { x: 2386, y: 560 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "3B",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "3B",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 2577, y: 703 },
+          // right bottom
+          { x: 2650, y: 703 },
+          // right top
+          { x: 2676, y: 560 },
+          // left top
+          { x: 2577, y: 560 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "4",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "4",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 2506, y: 837 },
+          // right bottom
+          { x: 2624.5, y: 837 },
+          // right top
+          { x: 2649.5, y: 704 },
+          // left top
+          { x: 2506, y: 704 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "5A",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "5A",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 2387, y: 837 },
+          // right bottom
+          { x: 2507, y: 837 },
+          // right top
+          { x: 2507, y: 704 },
+          // left top
+          { x: 2387, y: 704 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "5B",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "5B",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+
+      {
+        coordinates: [
+          // left bottom
+          { x: 2387, y: 1007 },
+          // right bottom
+          { x: 2507, y: 1007 },
+          // right top
+          { x: 2507, y: 870 },
+          // left top
+          { x: 2387, y: 870 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "6A",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "6A",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 2508, y: 1007 },
+          // right bottom
+          { x: 2595, y: 1007 },
+          // right top
+          { x: 2619, y: 870 },
+          // left top
+          { x: 2508, y: 870 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "6B",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "6B",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 2387.5, y: 1158 },
+          // right bottom
+          { x: 2567.5, y: 1158 },
+          // right top
+          { x: 2594.5, y: 1008 },
+          // left top
+          { x: 2387.5, y: 1008 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "7",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "7",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 2387.5, y: 1281 },
+          // right bottom
+          { x: 2547, y: 1281 },
+          // right top
+          { x: 2568, y: 1158.5 },
+          // left top
+          { x: 2387.5, y: 1158.5 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "8",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "8",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 2387.5, y: 1484 },
+          // right bottom
+          { x: 2529, y: 1484 },
+          // right top
+          { x: 2535, y: 1346 },
+          // left top
+          { x: 2387.5, y: 1346 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "9",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "9",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 2387.5, y: 1610.5 },
+          // right bottom
+          { x: 2524, y: 1610.5 },
+          // right top
+          { x: 2530, y: 1485 },
+          // left top
+          { x: 2387.5, y: 1485 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "10",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "10",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 2387.5, y: 1739 },
+          // right bottom
+          { x: 2518, y: 1739 },
+          // right top
+          { x: 2525, y: 1611 },
+          // left top
+          { x: 2387.5, y: 1611 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "11",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "11",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 2387.5, y: 1865 },
+          // right bottom
+          { x: 2512, y: 1865 },
+          // right top
+          { x: 2519, y: 1737.5 },
+          // left top
+          { x: 2387.5, y: 1737.5 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "12",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "12",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 2387.5, y: 1991 },
+          // right bottom
+          { x: 2511, y: 1991 },
+          // right top
+          { x: 2513, y: 1866 },
+          // left top
+          { x: 2387.5, y: 1866 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "13",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "13",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 2387.5, y: 2118 },
+          // right bottom
+          { x: 2511, y: 2118 },
+          // right top
+          { x: 2513, y: 1991.5 },
+          // left top
+          { x: 2387.5, y: 1991.5 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "14A",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "14A",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+
+      {
+        coordinates: [
+          // left bottom
+          { x: 2387.5, y: 2242 },
+          // right bottom
+          { x: 2539, y: 2242 },
+          // right top
+          { x: 2539, y: 2118.5 },
+          // left top
+          { x: 2387.5, y: 2118.5 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "14B",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "14B",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+
+      {
+        coordinates: [
+          // left bottom
+          { x: 2208, y: 2118 },
+          // right bottom
+          { x: 2353, y: 2118 },
+          // right top
+          { x: 2353, y: 1992 },
+          // left top
+          { x: 2208, y: 1992 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "15A",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "15A",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 2208, y: 2243 },
+          // right bottom
+          { x: 2353, y: 2243 },
+          // right top
+          { x: 2353, y: 2118 },
+          // left top
+          { x: 2208, y: 2118 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "15B",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "15B",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+
+      {
+        coordinates: [
+          // left bottom
+          { x: 2208, y: 1992 },
+          // right bottom
+          { x: 2353, y: 1992 },
+          // right top
+          { x: 2353, y: 1866 },
+          // left top
+          { x: 2208, y: 1866 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "16",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "16",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+
+      {
+        coordinates: [
+          // left bottom
+          { x: 2208, y: 1866 },
+          // right bottom
+          { x: 2353, y: 1866 },
+          // right top
+          { x: 2353, y: 1740 },
+          // left top
+          { x: 2208, y: 1740 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "17",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "17",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+
+      {
+        coordinates: [
+          // left bottom
+          { x: 2208, y: 1740 },
+          // right bottom
+          { x: 2353, y: 1740 },
+          // right top
+          { x: 2353, y: 1613 },
+          // left top
+          { x: 2208, y: 1613 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "18",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "18",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+
+      {
+        coordinates: [
+          // left bottom
+          { x: 2208, y: 1614 },
+          // right bottom
+          { x: 2353, y: 1614 },
+          // right top
+          { x: 2353, y: 1487 },
+          // left top
+          { x: 2208, y: 1487 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "19",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "19",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 2208, y: 1488 },
+          // right bottom
+          { x: 2353, y: 1488 },
+          // right top
+          { x: 2353, y: 1347 },
+          // left top
+          { x: 2208, y: 1347 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "20",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "20",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 2208, y: 1280 },
+          // right bottom
+          { x: 2353, y: 1280 },
+          // right top
+          { x: 2353, y: 1141 },
+          // left top
+          { x: 2208, y: 1141 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "21",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "21",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 2208, y: 1140 },
+          // right bottom
+          { x: 2353, y: 1140 },
+          // right top
+          { x: 2353, y: 1008 },
+          // left top
+          { x: 2208, y: 1008 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "22",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "22",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 2257, y: 1008 },
+          // right bottom
+          { x: 2353, y: 1008 },
+          // right top
+          { x: 2353, y: 870 },
+          // left top
+          { x: 2257, y: 870 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "23A",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "23A",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 2156, y: 1008 },
+          // right bottom
+          { x: 2256, y: 1008 },
+          // right top
+          { x: 2256, y: 870 },
+          // left top
+          { x: 2156, y: 870 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "23B",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "23B",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 2257, y: 837 },
+          // right bottom
+          { x: 2353, y: 837 },
+          // right top
+          { x: 2353, y: 708 },
+          // left top
+          { x: 2257, y: 708 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "24A",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "24A",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 2057, y: 837 },
+          // right bottom
+          { x: 2256, y: 837 },
+          // right top
+          { x: 2256, y: 708 },
+          // left top
+          { x: 2161, y: 708 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "24B",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "24B",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 2161, y: 709 },
+          // right bottom
+          { x: 2353, y: 709 },
+          // right top
+          { x: 2353, y: 560 },
+          // left top
+          { x: 2260, y: 560 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "25",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "25",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 2158, y: 523 },
+          // right bottom
+          { x: 2211, y: 523 },
+          // right top
+          { x: 2287, y: 370 },
+          // left top
+          { x: 2158, y: 370 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "26A",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "26A",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 2058, y: 523 },
+          // right bottom
+          { x: 2159, y: 523 },
+          // right top
+          { x: 2159, y: 370 },
+          // left top
+          { x: 2058, y: 370 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "26B",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "26B",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+
+      {
+        coordinates: [
+          // left bottom
+          { x: 2058, y: 745 },
+          // right bottom
+          { x: 2159, y: 605 },
+          // right top
+          { x: 2186, y: 559 },
+          // left top
+          { x: 2058, y: 559 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "27",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "27",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+
+      {
+        coordinates: [
+          // left bottom
+          { x: 2056, y: 1008 },
+          // right bottom
+          { x: 2156, y: 1008 },
+          // right top
+          { x: 2156, y: 870 },
+          // left top
+          { x: 2056, y: 870 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "28",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "28",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 2056, y: 1140 },
+          // right bottom
+          { x: 2208, y: 1140 },
+          // right top
+          { x: 2208, y: 1008 },
+          // left top
+          { x: 2056, y: 1008 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "29",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "29",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 2056, y: 1280 },
+          // right bottom
+          { x: 2208, y: 1280 },
+          // right top
+          { x: 2208, y: 1139 },
+          // left top
+          { x: 2056, y: 1139 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "30",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "30",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+
+      {
+        coordinates: [
+          // left bottom
+          { x: 2058, y: 1488 },
+          // right bottom
+          { x: 2208, y: 1488 },
+          // right top
+          { x: 2208, y: 1347 },
+          // left top
+          { x: 2058, y: 1347 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "31",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "31",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 2058, y: 1613 },
+          // right bottom
+          { x: 2208, y: 1613 },
+          // right top
+          { x: 2208, y: 1487 },
+          // left top
+          { x: 2058, y: 1487 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "32",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "32",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+
+      {
+        coordinates: [
+          // left bottom
+          { x: 2058, y: 1739 },
+          // right bottom
+          { x: 2208, y: 1739 },
+          // right top
+          { x: 2208, y: 1613 },
+          // left top
+          { x: 2058, y: 1613 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "33",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "33",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+
+      {
+        coordinates: [
+          // left bottom
+          { x: 2058, y: 1865.5 },
+          // right bottom
+          { x: 2208, y: 1865.5 },
+          // right top
+          { x: 2208, y: 1739 },
+          // left top
+          { x: 2058, y: 1739 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "34",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "34",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 2058, y: 1992 },
+          // right bottom
+          { x: 2208, y: 1992 },
+          // right top
+          { x: 2208, y: 1866 },
+          // left top
+          { x: 2058, y: 1866 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "35",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "35",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 2058, y: 2118 },
+          // right bottom
+          { x: 2208, y: 2118 },
+          // right top
+          { x: 2208, y: 1992 },
+          // left top
+          { x: 2058, y: 1992 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "36A",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "36A",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 2058, y: 2243 },
+          // right bottom
+          { x: 2208, y: 2243 },
+          // right top
+          { x: 2208, y: 2118.5 },
+          // left top
+          { x: 2058, y: 2118.5 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "36B",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "36B",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1877, y: 2118 },
+          // right bottom
+          { x: 2023, y: 2118 },
+          // right top
+          { x: 2023, y: 1992 },
+          // left top
+          { x: 1877, y: 1992 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "37A",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "37A",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1877, y: 2243 },
+          // right bottom
+          { x: 2023, y: 2243 },
+          // right top
+          { x: 2023, y: 2118.5 },
+          // left top
+          { x: 1877, y: 2118.5 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "37B",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "37B",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1877, y: 1991.5 },
+          // right bottom
+          { x: 2023, y: 1991.5 },
+          // right top
+          { x: 2023, y: 1866 },
+          // left top
+          { x: 1877, y: 1866 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "38",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "38",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+
+      {
+        coordinates: [
+          // left bottom
+          { x: 1877, y: 1867 },
+          // right bottom
+          { x: 2023, y: 1867 },
+          // right top
+          { x: 2023, y: 1740 },
+          // left top
+          { x: 1877, y: 1740 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "39",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "39",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1877, y: 1740 },
+          // right bottom
+          { x: 2023, y: 1740 },
+          // right top
+          { x: 2023, y: 1614 },
+          // left top
+          { x: 1877, y: 1614 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "40",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "40",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1877, y: 1613.5 },
+          // right bottom
+          { x: 2023, y: 1613.5 },
+          // right top
+          { x: 2023, y: 1487 },
+          // left top
+          { x: 1877, y: 1487 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "41",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "41",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1877, y: 1488 },
+          // right bottom
+          { x: 2023, y: 1488 },
+          // right top
+          { x: 2023, y: 1347 },
+          // left top
+          { x: 1877, y: 1347 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "42",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "42",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1877, y: 1280 },
+          // right bottom
+          { x: 2023, y: 1280 },
+          // right top
+          { x: 2023, y: 1167 },
+          // left top
+          { x: 1877, y: 1167 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "43",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "43",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+
+      {
+        coordinates: [
+          // left bottom
+          { x: 1911, y: 1167 },
+          // right bottom
+          { x: 2023, y: 1167 },
+          // right top
+          { x: 2023, y: 1069.5 },
+          // left top
+          { x: 1911, y: 1069.5 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "44",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "44",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1875, y: 1069 },
+          // right bottom
+          { x: 2023, y: 1069 },
+          // right top
+          { x: 2023, y: 870 },
+          // left top
+          { x: 1875, y: 1021 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "45",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "45",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1875, y: 940 },
+          // right bottom
+          { x: 2023, y: 789 },
+          // right top
+          { x: 2023, y: 730 },
+          // left top
+          { x: 1875, y: 730 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "46",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "46",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1875, y: 730 },
+          // right bottom
+          { x: 2023, y: 730 },
+          // right top
+          { x: 2023, y: 644 },
+          // left top
+          { x: 1875, y: 644 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "47A",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "47A",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1875, y: 644 },
+          // right bottom
+          { x: 2023, y: 644 },
+          // right top
+          { x: 2023, y: 558 },
+          // left top
+          { x: 1875, y: 558 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "47B",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "47B",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1875, y: 524 },
+          // right bottom
+          { x: 2023, y: 524 },
+          // right top
+          { x: 2023, y: 451.5 },
+          // left top
+          { x: 1875, y: 451.5 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "48A",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "48A",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1875, y: 451 },
+          // right bottom
+          { x: 2023, y: 451 },
+          // right top
+          { x: 2023, y: 368 },
+          // left top
+          { x: 1875, y: 368 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "48B",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "48B",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1729, y: 524 },
+          // right bottom
+          { x: 1876, y: 524 },
+          // right top
+          { x: 1876, y: 451.5 },
+          // left top
+          { x: 1729, y: 451.5 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "49A",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "49A",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1729, y: 452 },
+          // right bottom
+          { x: 1876, y: 452 },
+          // right top
+          { x: 1876, y: 367 },
+          // left top
+          { x: 1729, y: 367 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "49B",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "49B",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1729, y: 785 },
+          // right bottom
+          { x: 1876, y: 785 },
+          // right top
+          { x: 1876, y: 684 },
+          // left top
+          { x: 1729, y: 684 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "50A",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "50A",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1729, y: 685 },
+          // right bottom
+          { x: 1876, y: 685 },
+          // right top
+          { x: 1876, y: 558 },
+          // left top
+          { x: 1729, y: 558 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "50B",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "50B",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1726, y: 1488 },
+          // right bottom
+          { x: 1876, y: 1488 },
+          // right top
+          { x: 1876, y: 1347 },
+          // left top
+          { x: 1727, y: 1347 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "52",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "52",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1726, y: 1612 },
+          // right bottom
+          { x: 1876, y: 1612 },
+          // right top
+          { x: 1876, y: 1488 },
+          // left top
+          { x: 1727, y: 1488 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "53",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "53",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1726, y: 1739 },
+          // right bottom
+          { x: 1876, y: 1739 },
+          // right top
+          { x: 1876, y: 1613 },
+          // left top
+          { x: 1727, y: 1613 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "54",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "54",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1726, y: 1865 },
+          // right bottom
+          { x: 1876, y: 1865 },
+          // right top
+          { x: 1876, y: 1740 },
+          // left top
+          { x: 1727, y: 1740 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "55",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "55",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1726, y: 1992 },
+          // right bottom
+          { x: 1876, y: 1992 },
+          // right top
+          { x: 1876, y: 1866 },
+          // left top
+          { x: 1727, y: 1866 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "56",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "56",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1726, y: 2118 },
+          // right bottom
+          { x: 1876, y: 2118 },
+          // right top
+          { x: 1876, y: 1991 },
+          // left top
+          { x: 1727, y: 1991 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "57A",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "57A",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1726, y: 2243 },
+          // right bottom
+          { x: 1876, y: 2243 },
+          // right top
+          { x: 1876, y: 2119 },
+          // left top
+          { x: 1727, y: 2119 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "57B",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "57B",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1490, y: 2243 },
+          // right bottom
+          { x: 1591, y: 2243 },
+          // right top
+          { x: 1591, y: 2119 },
+          // left top
+          { x: 1490, y: 2119 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "58A",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "58A",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1592, y: 2243 },
+          // right bottom
+          { x: 1693, y: 2243 },
+          // right top
+          { x: 1693, y: 2119 },
+          // left top
+          { x: 1592, y: 2119 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "58B",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "58B",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+
+      {
+        coordinates: [
+          // left bottom
+          { x: 1490, y: 2118 },
+          // right bottom
+          { x: 1590, y: 2118 },
+          // right top
+          { x: 1590, y: 1993 },
+          // left top
+          { x: 1490, y: 1993 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "59A",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "59A",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1590, y: 2118 },
+          // right bottom
+          { x: 1693, y: 2118 },
+          // right top
+          { x: 1693, y: 1993 },
+          // left top
+          { x: 1590, y: 1993 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "59B",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "59B",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1490, y: 1994 },
+          // right bottom
+          { x: 1590, y: 1994 },
+          // right top
+          { x: 1590, y: 1883 },
+          // left top
+          { x: 1490, y: 1883 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "60A",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "60A",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1590, y: 1994 },
+          // right bottom
+          { x: 1693, y: 1994 },
+          // right top
+          { x: 1693, y: 1883 },
+          // left top
+          { x: 1590, y: 1883 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "60B",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "60B",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1490, y: 1849 },
+          // right bottom
+          { x: 1590, y: 1849 },
+          // right top
+          { x: 1590, y: 1730 },
+          // left top
+          { x: 1490, y: 1730 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "61A",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "61A",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1590, y: 1849 },
+          // right bottom
+          { x: 1693, y: 1849 },
+          // right top
+          { x: 1693, y: 1730 },
+          // left top
+          { x: 1590, y: 1730 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "61B",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "61B",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1490, y: 1729 },
+          // right bottom
+          { x: 1590, y: 1729 },
+          // right top
+          { x: 1590, y: 1609 },
+          // left top
+          { x: 1490, y: 1609 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "62A",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "62A",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1590, y: 1729 },
+          // right bottom
+          { x: 1693, y: 1729 },
+          // right top
+          { x: 1693, y: 1609 },
+          // left top
+          { x: 1590, y: 1609 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "62B",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "62B",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+
+      {
+        coordinates: [
+          // left bottom
+          { x: 1490, y: 1609 },
+          // right bottom
+          { x: 1590, y: 1609 },
+          // right top
+          { x: 1590, y: 1488 },
+          // left top
+          { x: 1490, y: 1488 },
+        ],
+        fill: "rgba(0, 128, 0, 0.7)",
+        stroke: "white",
+        id: "63A",
+        data: {
+          availability: "sold",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "63A",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1590, y: 1609 },
+          // right bottom
+          { x: 1693, y: 1609 },
+          // right top
+          { x: 1693, y: 1488 },
+          // left top
+          { x: 1590, y: 1488 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "63B",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "63B",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1548, y: 1488 },
+          // right bottom
+          { x: 1693, y: 1488 },
+          // right top
+          { x: 1693, y: 1347 },
+          // left top
+          { x: 1576, y: 1347 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "63",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "63",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1355, y: 1609 },
+          // right bottom
+          { x: 1454, y: 1609 },
+          // right top
+          { x: 1454, y: 1488 },
+          // left top
+          { x: 1355, y: 1522 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "64",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "64",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1355, y: 1717 },
+          // right bottom
+          { x: 1454, y: 1717 },
+          // right top
+          { x: 1454, y: 1610 },
+          // left top
+          { x: 1355, y: 1610 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "65",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "65",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1355, y: 1821 },
+          // right bottom
+          { x: 1454, y: 1821 },
+          // right top
+          { x: 1454, y: 1718 },
+          // left top
+          { x: 1355, y: 1718 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "66",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "66",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1355, y: 1927 },
+          // right bottom
+          { x: 1454, y: 1927 },
+          // right top
+          { x: 1454, y: 1822 },
+          // left top
+          { x: 1355, y: 1822 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "67A",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "67A",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1355, y: 2032.5 },
+          // right bottom
+          { x: 1454, y: 2032.5 },
+          // right top
+          { x: 1454, y: 1928 },
+          // left top
+          { x: 1355, y: 1928 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "67B",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "67B",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1355, y: 2138 },
+          // right bottom
+          { x: 1454, y: 2138 },
+          // right top
+          { x: 1454, y: 2034 },
+          // left top
+          { x: 1355, y: 2034 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "68A",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "68A",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1355, y: 2242 },
+          // right bottom
+          { x: 1454, y: 2242 },
+          // right top
+          { x: 1454, y: 2139 },
+          // left top
+          { x: 1355, y: 2139 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "68B",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "68B",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1251, y: 2242 },
+          // right bottom
+          { x: 1354, y: 2242 },
+          // right top
+          { x: 1354, y: 2139 },
+          // left top
+          { x: 1251, y: 2139 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "69B",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "69B",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1251, y: 2140 },
+          // right bottom
+          { x: 1354, y: 2140 },
+          // right top
+          { x: 1354, y: 2034 },
+          // left top
+          { x: 1251, y: 2034 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "69A",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "69A",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1251, y: 2035 },
+          // right bottom
+          { x: 1354, y: 2035 },
+          // right top
+          { x: 1354, y: 1930 },
+          // left top
+          { x: 1251, y: 1930 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "70",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "70",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1251, y: 1930 },
+          // right bottom
+          { x: 1354, y: 1930 },
+          // right top
+          { x: 1354, y: 1823 },
+          // left top
+          { x: 1251, y: 1823 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "71",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "71",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1251, y: 1824 },
+          // right bottom
+          { x: 1354, y: 1824 },
+          // right top
+          { x: 1354, y: 1718 },
+          // left top
+          { x: 1251, y: 1718 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "72",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "72",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1251, y: 1718 },
+          // right bottom
+          { x: 1354, y: 1718 },
+          // right top
+          { x: 1354, y: 1612 },
+          // left top
+          { x: 1251, y: 1612 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "73",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "73",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1251, y: 1494 },
+          // right bottom
+          { x: 1370, y: 1442 },
+          // right top
+          { x: 1370, y: 1350 },
+          // left top
+          { x: 1251, y: 1350 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "74",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "74",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1605.5, y: 815 },
+          // right bottom
+          { x: 1693, y: 815 },
+          // right top
+          { x: 1693, y: 690 },
+          // left top
+          { x: 1605.5, y: 690 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "75",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "75",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1516, y: 815 },
+          // right bottom
+          { x: 1605, y: 815 },
+          // right top
+          { x: 1605, y: 690 },
+          // left top
+          { x: 1516, y: 690 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "76",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "76",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1427, y: 815 },
+          // right bottom
+          { x: 1515, y: 815 },
+          // right top
+          { x: 1515, y: 690 },
+          // left top
+          { x: 1427, y: 690 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "77",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "77",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1337, y: 815 },
+          // right bottom
+          { x: 1427, y: 815 },
+          // right top
+          { x: 1427, y: 690 },
+          // left top
+          { x: 1337, y: 690 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "78",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "78",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1251, y: 815 },
+          // right bottom
+          { x: 1337, y: 815 },
+          // right top
+          { x: 1337, y: 690 },
+          // left top
+          { x: 1251, y: 690 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "79",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "79",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1251, y: 690 },
+          // right bottom
+          { x: 1337, y: 690 },
+          // right top
+          { x: 1337, y: 558 },
+          // left top
+          { x: 1251, y: 558 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "80",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "80",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1337, y: 690 },
+          // right bottom
+          { x: 1426.5, y: 690 },
+          // right top
+          { x: 1426, y: 558 },
+          // left top
+          { x: 1337.5, y: 558 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "81",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "81",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1427, y: 690 },
+          // right bottom
+          { x: 1515, y: 690 },
+          // right top
+          { x: 1515, y: 558 },
+          // left top
+          { x: 1427, y: 558 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "82",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "82",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1515, y: 690 },
+          // right bottom
+          { x: 1604, y: 690 },
+          // right top
+          { x: 1604, y: 558 },
+          // left top
+          { x: 1515, y: 558 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "83",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "83",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1605, y: 690 },
+          // right bottom
+          { x: 1693, y: 690 },
+          // right top
+          { x: 1693, y: 558 },
+          // left top
+          { x: 1605, y: 558 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "84",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "84",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1605, y: 524 },
+          // right bottom
+          { x: 1693, y: 524 },
+          // right top
+          { x: 1693, y: 368 },
+          // left top
+          { x: 1605, y: 368 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "85B",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "85B",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1518, y: 524 },
+          // right bottom
+          { x: 1605, y: 524 },
+          // right top
+          { x: 1605, y: 368 },
+          // left top
+          { x: 1518, y: 368 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "85A",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "85A",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1428, y: 524 },
+          // right bottom
+          { x: 1517, y: 524 },
+          // right top
+          { x: 1517, y: 368 },
+          // left top
+          { x: 1428, y: 368 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "86",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "86",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1339, y: 524 },
+          // right bottom
+          { x: 1427, y: 524 },
+          // right top
+          { x: 1427, y: 368 },
+          // left top
+          { x: 1339, y: 368 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "87B",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "87B",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1251, y: 524 },
+          // right bottom
+          { x: 1338, y: 524 },
+          // right top
+          { x: 1338, y: 368 },
+          // left top
+          { x: 1251, y: 368 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "87A",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "87A",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1100, y: 524 },
+          // right bottom
+          { x: 1217, y: 524 },
+          // right top
+          { x: 1217, y: 369 },
+          // left top
+          { x: 1100, y: 369 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "88",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "88",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1100, y: 663 },
+          // right bottom
+          { x: 1217, y: 663 },
+          // right top
+          { x: 1217, y: 559 },
+          // left top
+          { x: 1100, y: 559 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "89",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "89",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1100, y: 766 },
+          // right bottom
+          { x: 1217, y: 766 },
+          // right top
+          { x: 1217, y: 663 },
+          // left top
+          { x: 1100, y: 663 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "90",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "90",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1100, y: 870 },
+          // right bottom
+          { x: 1217, y: 870 },
+          // right top
+          { x: 1217, y: 766 },
+          // left top
+          { x: 1100, y: 766 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "91",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "91",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1100, y: 972 },
+          // right bottom
+          { x: 1217, y: 972 },
+          // right top
+          { x: 1217, y: 870 },
+          // left top
+          { x: 1100, y: 870 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "92",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "92",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1100, y: 1077 },
+          // right bottom
+          { x: 1217, y: 1077 },
+          // right top
+          { x: 1217, y: 972 },
+          // left top
+          { x: 1100, y: 972 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "93",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "93",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1100, y: 1180 },
+          // right bottom
+          { x: 1217, y: 1180 },
+          // right top
+          { x: 1217, y: 1077 },
+          // left top
+          { x: 1100, y: 1077 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "94",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "94",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1100, y: 1280 },
+          // right bottom
+          { x: 1217, y: 1280 },
+          // right top
+          { x: 1217, y: 1180 },
+          // left top
+          { x: 1100, y: 1180 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "95",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "95",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1100, y: 1456 },
+          // right bottom
+          { x: 1217, y: 1456 },
+          // right top
+          { x: 1217, y: 1350 },
+          // left top
+          { x: 1100, y: 1350 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "96",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "96",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1100, y: 1579 },
+          // right bottom
+          { x: 1217, y: 1511 },
+          // right top
+          { x: 1217, y: 1456 },
+          // left top
+          { x: 1100, y: 1456 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "97",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "97",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1100, y: 1719 },
+          // right bottom
+          { x: 1217, y: 1719 },
+          // right top
+          { x: 1217, y: 1578 },
+          // left top
+          { x: 1100, y: 1648 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "98",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "98",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1100, y: 1824 },
+          // right bottom
+          { x: 1217, y: 1824 },
+          // right top
+          { x: 1217, y: 1720 },
+          // left top
+          { x: 1100, y: 1720 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "99",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "99",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1100, y: 1930 },
+          // right bottom
+          { x: 1217, y: 1930 },
+          // right top
+          { x: 1217, y: 1825 },
+          // left top
+          { x: 1100, y: 1825 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "100",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "100",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1100, y: 2035 },
+          // right bottom
+          { x: 1217, y: 2035 },
+          // right top
+          { x: 1217, y: 1931 },
+          // left top
+          { x: 1100, y: 1931 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "101",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "101",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1100, y: 2141 },
+          // right bottom
+          { x: 1217, y: 2141 },
+          // right top
+          { x: 1217, y: 2036 },
+          // left top
+          { x: 1100, y: 2036 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "102",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "102",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1100, y: 2245 },
+          // right bottom
+          { x: 1217, y: 2245 },
+          // right top
+          { x: 1217, y: 2142 },
+          // left top
+          { x: 1100, y: 2142 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "103",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "103",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 981, y: 2245 },
+          // right bottom
+          { x: 1099, y: 2245 },
+          // right top
+          { x: 1099, y: 2142 },
+          // left top
+          { x: 981, y: 2142 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "104",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "104",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 981, y: 2141 },
+          // right bottom
+          { x: 1099, y: 2141 },
+          // right top
+          { x: 1099, y: 2036 },
+          // left top
+          { x: 981, y: 2036 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "105",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "105",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+
+      {
+        coordinates: [
+          // left bottom
+          { x: 981, y: 2036 },
+          // right bottom
+          { x: 1099, y: 2036 },
+          // right top
+          { x: 1099, y: 1931 },
+          // left top
+          { x: 981, y: 1931 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "106",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "106",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 981, y: 1932 },
+          // right bottom
+          { x: 1099, y: 1932 },
+          // right top
+          { x: 1099, y: 1827 },
+          // left top
+          { x: 981, y: 1827 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "107",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "107",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 981, y: 1828 },
+          // right bottom
+          { x: 1099, y: 1828 },
+          // right top
+          { x: 1099, y: 1649 },
+          // left top
+          { x: 981, y: 1720 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "108",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "108",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 981, y: 1650 },
+          // right bottom
+          { x: 1099, y: 1580 },
+          // right top
+          { x: 1099, y: 1457 },
+          // left top
+          { x: 981, y: 1457 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "109",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "109",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 981, y: 1457 },
+          // right bottom
+          { x: 1099, y: 1457 },
+          // right top
+          { x: 1099, y: 1350 },
+          // left top
+          { x: 981, y: 1350 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "110",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "110",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+
+      {
+        coordinates: [
+          // left bottom
+          { x: 981, y: 1280 },
+          // right bottom
+          { x: 1099, y: 1280 },
+          // right top
+          { x: 1099, y: 1180 },
+          // left top
+          { x: 981, y: 1180 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "111",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "111",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 981, y: 1180 },
+          // right bottom
+          { x: 1099, y: 1180 },
+          // right top
+          { x: 1099, y: 1077 },
+          // left top
+          { x: 981, y: 1077 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "112",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "112",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 981, y: 1076 },
+          // right bottom
+          { x: 1099, y: 1076 },
+          // right top
+          { x: 1099, y: 973 },
+          // left top
+          { x: 981, y: 973 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "113",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "113",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 981, y: 974 },
+          // right bottom
+          { x: 1099, y: 974 },
+          // right top
+          { x: 1099, y: 870 },
+          // left top
+          { x: 981, y: 870 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "114",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "114",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 981, y: 869 },
+          // right bottom
+          { x: 1099, y: 869 },
+          // right top
+          { x: 1099, y: 765 },
+          // left top
+          { x: 981, y: 765 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "115",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "115",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 981, y: 766 },
+          // right bottom
+          { x: 1099, y: 766 },
+          // right top
+          { x: 1099, y: 662 },
+          // left top
+          { x: 981, y: 662 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "116",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "116",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 981, y: 662 },
+          // right bottom
+          { x: 1099, y: 662 },
+          // right top
+          { x: 1099, y: 560 },
+          // left top
+          { x: 981, y: 560 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "117",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "117",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 917, y: 523 },
+          // right bottom
+          { x: 1005, y: 523 },
+          // right top
+          { x: 1005, y: 368 },
+          // left top
+          { x: 917, y: 368 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "118B",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "118B",
+          plotNumber: "118B",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+
+      {
+        coordinates: [
+          // left bottom
+          { x: 1004, y: 523 },
+          // right bottom
+          { x: 1100, y: 523 },
+          // right top
+          { x: 1100, y: 368 },
+          // left top
+          { x: 1004, y: 368 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "118A",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "118A",
+          plotNumber: "118A",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 829, y: 660 },
+          // right bottom
+          { x: 947, y: 660 },
+          // right top
+          { x: 947, y: 560 },
+          // left top
+          { x: 829, y: 560 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "119",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "119",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 829, y: 763 },
+          // right bottom
+          { x: 947, y: 763 },
+          // right top
+          { x: 947, y: 660 },
+          // left top
+          { x: 829, y: 660 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "120",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "120",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 829, y: 866 },
+          // right bottom
+          { x: 947, y: 866 },
+          // right top
+          { x: 947, y: 763 },
+          // left top
+          { x: 829, y: 763 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "121",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "121",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 829, y: 971 },
+          // right bottom
+          { x: 947, y: 971 },
+          // right top
+          { x: 947, y: 867 },
+          // left top
+          { x: 829, y: 867 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "122",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "122",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 829, y: 1073 },
+          // right bottom
+          { x: 947, y: 1073 },
+          // right top
+          { x: 947, y: 970 },
+          // left top
+          { x: 829, y: 970 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "123",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "123",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 829, y: 1177 },
+          // right bottom
+          { x: 947, y: 1177 },
+          // right top
+          { x: 947, y: 1074 },
+          // left top
+          { x: 829, y: 1074 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "124",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "124",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 829, y: 1281 },
+          // right bottom
+          { x: 947, y: 1281 },
+          // right top
+          { x: 947, y: 1178 },
+          // left top
+          { x: 829, y: 1178 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "125",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "125",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 829, y: 1453 },
+          // right bottom
+          { x: 947, y: 1453 },
+          // right top
+          { x: 947, y: 1348 },
+          // left top
+          { x: 829, y: 1348 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "126",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "126",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 829, y: 1561 },
+          // right bottom
+          { x: 947, y: 1561 },
+          // right top
+          { x: 947, y: 1453 },
+          // left top
+          { x: 829, y: 1453 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "127",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "127",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 829, y: 1753 },
+          // right bottom
+          { x: 947, y: 1671 },
+          // right top
+          { x: 947, y: 1562 },
+          // left top
+          { x: 829, y: 1562 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "128",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "128",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 829, y: 1905 },
+          // right bottom
+          { x: 947, y: 1905 },
+          // right top
+          { x: 947, y: 1742 },
+          // left top
+          { x: 829, y: 1822 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "129",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "129",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 829, y: 2019 },
+          // right bottom
+          { x: 947, y: 2019 },
+          // right top
+          { x: 947, y: 1906 },
+          // left top
+          { x: 829, y: 1906 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "130",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "130",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 829, y: 2131 },
+          // right bottom
+          { x: 947, y: 2131 },
+          // right top
+          { x: 947, y: 2018 },
+          // left top
+          { x: 829, y: 2018 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "131",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "131",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 829, y: 2242 },
+          // right bottom
+          { x: 947, y: 2242 },
+          // right top
+          { x: 947, y: 2132 },
+          // left top
+          { x: 829, y: 2132 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "132",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "132",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 709, y: 2242 },
+          // right bottom
+          { x: 828, y: 2242 },
+          // right top
+          { x: 828, y: 2132 },
+          // left top
+          { x: 709, y: 2132 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "133",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "133",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 709, y: 2132 },
+          // right bottom
+          { x: 828, y: 2132 },
+          // right top
+          { x: 828, y: 2018 },
+          // left top
+          { x: 709, y: 2018 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "134",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "134",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+
+      {
+        coordinates: [
+          // left bottom
+          { x: 709, y: 2019 },
+          // right bottom
+          { x: 828, y: 2019 },
+          // right top
+          { x: 828, y: 1906 },
+          // left top
+          { x: 709, y: 1906 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "135",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "135",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 709, y: 1837 },
+          // right bottom
+          { x: 828, y: 1754 },
+          // right top
+          { x: 828, y: 1673 },
+          // left top
+          { x: 709, y: 1673 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "136",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "136",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+
+      {
+        coordinates: [
+          // left bottom
+          { x: 709, y: 1672 },
+          // right bottom
+          { x: 828, y: 1672 },
+          // right top
+          { x: 828, y: 1563 },
+          // left top
+          { x: 709, y: 1563 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "137",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "137",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 709, y: 1562 },
+          // right bottom
+          { x: 828, y: 1562 },
+          // right top
+          { x: 828, y: 1453 },
+          // left top
+          { x: 709, y: 1453 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "138",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "138",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+
+      {
+        coordinates: [
+          // left bottom
+          { x: 709, y: 1453 },
+          // right bottom
+          { x: 828, y: 1453 },
+          // right top
+          { x: 828, y: 1348 },
+          // left top
+          { x: 709, y: 1348 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "139",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "139",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+
+      {
+        coordinates: [
+          // left bottom
+          { x: 709, y: 1280 },
+          // right bottom
+          { x: 828, y: 1280 },
+          // right top
+          { x: 828, y: 1179 },
+          // left top
+          { x: 709, y: 1179 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "140",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "140",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+
+      {
+        coordinates: [
+          // left bottom
+          { x: 709, y: 1180 },
+          // right bottom
+          { x: 828, y: 1180 },
+          // right top
+          { x: 828, y: 1076 },
+          // left top
+          { x: 709, y: 1076 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "141",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "141",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 709, y: 1077 },
+          // right bottom
+          { x: 828, y: 1077 },
+          // right top
+          { x: 828, y: 972 },
+          // left top
+          { x: 709, y: 972 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "142",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "142",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 709, y: 973 },
+          // right bottom
+          { x: 828, y: 973 },
+          // right top
+          { x: 828, y: 868 },
+          // left top
+          { x: 709, y: 868 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "143",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "143",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 709, y: 870 },
+          // right bottom
+          { x: 828, y: 870 },
+          // right top
+          { x: 828, y: 765 },
+          // left top
+          { x: 709, y: 765 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "144",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "144",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+
+      {
+        coordinates: [
+          // left bottom
+          { x: 709, y: 767 },
+          // right bottom
+          { x: 828, y: 767 },
+          // right top
+          { x: 828, y: 662 },
+          // left top
+          { x: 709, y: 662 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "145",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "145",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+
+      {
+        coordinates: [
+          // left bottom
+          { x: 709, y: 662 },
+          // right bottom
+          { x: 828, y: 662 },
+          // right top
+          { x: 828, y: 560 },
+          // left top
+          { x: 709, y: 560 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "146",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "146",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 709, y: 523 },
+          // right bottom
+          { x: 828, y: 523 },
+          // right top
+          { x: 828, y: 368 },
+          // left top
+          { x: 709, y: 368 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "147",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "147",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 827, y: 523 },
+          // right bottom
+          { x: 916, y: 523 },
+          // right top
+          { x: 916, y: 368 },
+          // left top
+          { x: 827, y: 368 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "118C",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "118C",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+
+      {
+        coordinates: [
+          // left bottom
+          { x: 534, y: 448 },
+          // right bottom
+          { x: 676, y: 448 },
+          // right top
+          { x: 676, y: 368 },
+          // left top
+          { x: 534, y: 368 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "148",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "148",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 534, y: 525 },
+          // right bottom
+          { x: 676, y: 525 },
+          // right top
+          { x: 676, y: 448 },
+          // left top
+          { x: 534, y: 448 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "149",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "149",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+
+      {
+        coordinates: [
+          // left bottom
+          { x: 392, y: 525 },
+          // right bottom
+          { x: 534, y: 525 },
+          // right top
+          { x: 534, y: 368 },
+          // left top
+          { x: 349, y: 368 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "150",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "150",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+
+      {
+        coordinates: [
+          // left bottom
+          { x: 534, y: 658 },
+          // right bottom
+          { x: 676, y: 658 },
+          // right top
+          { x: 676, y: 559 },
+          // left top
+          { x: 534, y: 559 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "151",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "151",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+
+      {
+        coordinates: [
+          // left bottom
+          { x: 534, y: 762 },
+          // right bottom
+          { x: 676, y: 762 },
+          // right top
+          { x: 676, y: 659 },
+          // left top
+          { x: 534, y: 659 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "152",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "152",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+
+      {
+        coordinates: [
+          // left bottom
+          { x: 534, y: 865 },
+          // right bottom
+          { x: 676, y: 865 },
+          // right top
+          { x: 676, y: 762 },
+          // left top
+          { x: 534, y: 762 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "153",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "153",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 534, y: 969 },
+          // right bottom
+          { x: 676, y: 969 },
+          // right top
+          { x: 676, y: 866 },
+          // left top
+          { x: 534, y: 866 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "154",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "154",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+
+      {
+        coordinates: [
+          // left bottom
+          { x: 534, y: 1073 },
+          // right bottom
+          { x: 676, y: 1073 },
+          // right top
+          { x: 676, y: 968 },
+          // left top
+          { x: 534, y: 968 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "155",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "155",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 547, y: 1177 },
+          // right bottom
+          { x: 676, y: 1177 },
+          // right top
+          { x: 676, y: 1073 },
+          // left top
+          { x: 534, y: 1073 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "156",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "156",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 571, y: 1277 },
+          // right bottom
+          { x: 676, y: 1277 },
+          // right top
+          { x: 676, y: 1177 },
+          // left top
+          { x: 548, y: 1177 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "157",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "157",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 2208, y: 2383 },
+          // right bottom
+          { x: 2353, y: 2383 },
+          // right top
+          { x: 2353, y: 2278 },
+          // left top
+          { x: 2208, y: 2278 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "177",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "177",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+
+      {
+        coordinates: [
+          // left bottom
+          { x: 2208, y: 2492 },
+          // right bottom
+          { x: 2353, y: 2492 },
+          // right top
+          { x: 2353, y: 2384 },
+          // left top
+          { x: 2208, y: 2384 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "178",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "178",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 2208, y: 2611 },
+          // right bottom
+          { x: 2353, y: 2625 },
+          // right top
+          { x: 2353, y: 2492 },
+          // left top
+          { x: 2208, y: 2492 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "179",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "179",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+
+      {
+        coordinates: [
+          // left bottom
+          { x: 2058, y: 2383 },
+          // right bottom
+          { x: 2208, y: 2383 },
+          // right top
+          { x: 2208, y: 2278 },
+          // left top
+          { x: 2058, y: 2278 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "176",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "176",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 2058, y: 2492 },
+          // right bottom
+          { x: 2208, y: 2492 },
+          // right top
+          { x: 2208, y: 2383 },
+          // left top
+          { x: 2058, y: 2383 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "175",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "175",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1878, y: 2492 },
+          // right bottom
+          { x: 2023, y: 2492 },
+          // right top
+          { x: 2023, y: 2384 },
+          // left top
+          { x: 1878, y: 2384 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "172",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "172",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1878, y: 2385 },
+          // right bottom
+          { x: 2023, y: 2385 },
+          // right top
+          { x: 2023, y: 2277.5 },
+          // left top
+          { x: 1878, y: 2277.5 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "171",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "171",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1728, y: 2385 },
+          // right bottom
+          { x: 1879, y: 2385 },
+          // right top
+          { x: 1879, y: 2277.5 },
+          // left top
+          { x: 1728, y: 2277.5 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "170",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "170",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1728, y: 2492 },
+          // right bottom
+          { x: 1879, y: 2492 },
+          // right top
+          { x: 1879, y: 2385 },
+          // left top
+          { x: 1728, y: 2385 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "169",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "169",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1593, y: 2385 },
+          // right bottom
+          { x: 1692, y: 2385 },
+          // right top
+          { x: 1692, y: 2277.5 },
+          // left top
+          { x: 1593, y: 2277.5 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "165",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "165",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1592, y: 2492 },
+          // right bottom
+          { x: 1692, y: 2492 },
+          // right top
+          { x: 1692, y: 2385 },
+          // left top
+          { x: 1592, y: 2385 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "166",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "166",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1488, y: 2492 },
+          // right bottom
+          { x: 1591, y: 2492 },
+          // right top
+          { x: 1591, y: 2385 },
+          // left top
+          { x: 1488, y: 2385 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "163",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "163",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1488, y: 2386 },
+          // right bottom
+          { x: 1593, y: 2386 },
+          // right top
+          { x: 1593, y: 2278 },
+          // left top
+          { x: 1488, y: 2278 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "164",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "164",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1488, y: 2660 },
+          // right bottom
+          { x: 1591, y: 2629 },
+          // right top
+          { x: 1591, y: 2492 },
+          // left top
+          { x: 1488, y: 2492 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "162",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "162",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+
+      {
+        coordinates: [
+          // left bottom
+          { x: 1592, y: 2628 },
+          // right bottom
+          { x: 1692, y: 2597 },
+          // right top
+          { x: 1692, y: 2492 },
+          // left top
+          { x: 1592, y: 2492 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "166",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "166",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+
+      {
+        coordinates: [
+          // left bottom
+          { x: 1878, y: 2588 },
+          // right bottom
+          { x: 2023, y: 2600 },
+          // right top
+          { x: 2023, y: 2493 },
+          // left top
+          { x: 1878, y: 2493 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "173",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "173",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 2058, y: 2599 },
+          // right bottom
+          { x: 2208, y: 2611 },
+          // right top
+          { x: 2208, y: 2492 },
+          // left top
+          { x: 2058, y: 2492 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "174",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "174",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+
+      {
+        coordinates: [
+          // left bottom
+          { x: 1728, y: 2572 },
+          // right bottom
+          { x: 1879, y: 2588 },
+          // right top
+          { x: 1879, y: 2493 },
+          // left top
+          { x: 1728, y: 2493 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "168",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "168",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1349, y: 2405 },
+          // right bottom
+          { x: 1455, y: 2405 },
+          // right top
+          { x: 1455, y: 2278 },
+          // left top
+          { x: 1399, y: 2278 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "158",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "158",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1317, y: 2493 },
+          // right bottom
+          { x: 1455, y: 2493 },
+          // right top
+          { x: 1455, y: 2406 },
+          // left top
+          { x: 1349, y: 2406 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "159",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "159",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1285, y: 2582 },
+          // right bottom
+          { x: 1455, y: 2582 },
+          // right top
+          { x: 1455, y: 2494 },
+          // left top
+          { x: 1317, y: 2494 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "160",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "160",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+      {
+        coordinates: [
+          // left bottom
+          { x: 1230, y: 2737 },
+          // right bottom
+          { x: 1455, y: 2671 },
+          // right top
+          { x: 1455, y: 2582 },
+          // left top
+          { x: 1285, y: 2582 },
+        ],
+        fill: "transparent",
+        stroke: "white",
+        id: "161",
+        data: {
+          availability: "available",
+          area: "2250 s.ft",
+          cost: "500",
+          plotNumber: "161",
+          facing: "west",
+          image: "images/jk_top_view.jpg",
+          link: "pano/plot-1/index.htm",
+        },
+      },
+    ];
+
+    let selectedPlots = [];
+  </script>
+
+  <script src="main.js"></script>
+</body>
+
+</html>
