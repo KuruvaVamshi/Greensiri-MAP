@@ -1041,9 +1041,9 @@ new card code */
 }
 
 .panel-row .label {
-  font-size: 14px;
-  letter-spacing: 2px;
-  min-width: 160px;
+  font-size: 1.02vw;
+  letter-spacing: 0.15vw;
+  min-width: 11.7vw;
   /* keeps label fixed */
 }
 
@@ -1056,9 +1056,9 @@ new card code */
 }
 
 .panel-row .value {
-  font-size: 16px;
-  letter-spacing: 1px;
-  min-width: 60px;
+  font-size: 1.17vw;
+  letter-spacing: 0.07vw;
+  min-width: 4.4vw;
   /* keeps number aligned */
   text-align: right;
 }
@@ -1066,9 +1066,9 @@ new card code */
 .plot-info-panel {
   position: fixed;
   right: 10%;
-  top: 12%;
-  width: 380px;
-  padding: 26px 28px;
+  top: 4%;
+  width: 27.8vw;
+  padding: 1.9vw 2vw;
   font-family: "Century Gothic", sans-serif;
   color: #5b5a2f;
   display: none;
@@ -1080,24 +1080,24 @@ new card code */
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 28px;
+  margin-bottom: 2vw;
 }
 
 .panel-header h3 {
-  font-size: 20px;
-  letter-spacing: 1.5px;
+  font-size: 1.46vw;
+  letter-spacing: 0.11vw;
   margin: 0;
-  border-bottom: 2px solid #5b5a2f;
-  padding-bottom: 4px;
+  border-bottom: 0.15vw solid #5b5a2f;
+  padding-bottom: 0.29vw;
 }
 
 /* Audio icons */
 .panel-icons button {
   background: none;
   border: none;
-  font-size: 20px;
+  font-size: 1.46vw;
   cursor: pointer;
-  margin-left: 12px;
+  margin-left: 0.88vw;
   color: #5b5a2f;
 }
 
@@ -1105,28 +1105,28 @@ new card code */
 .panel-row {
   display: flex;
   align-items: center;
-  margin-bottom: 16px;
+  margin-bottom: 1.17vw;
   white-space: nowrap;
 }
 
 .panel-row .label {
-  min-width: 195px;
-  font-size: 14px;
-  letter-spacing: 2px;
+  width: 14.3vw;
+  flex-shrink: 0;
+  font-size: 1.02vw;
+  letter-spacing: 0.15vw;
 }
 
 .line {
   display: block;
-  height: 1.2px;
+  height: 0.09vw;
   background: #5b5a2f;
-  margin: 3px 20px;
+  margin: 0.22vw 1.46vw;
   opacity: 0.6;
 }
 
 .panel-row .value {
-  min-width: 80px;
-  font-size: 16px;
-  text-align: right;
+  font-size: 1.17vw;
+  text-align: left;
 }
 
 /* Language buttons */
@@ -1150,58 +1150,9 @@ new card code */
   color: #fff;
 }
 
-@media (max-width: 768px) {
-  .plot-info-panel {
-    position: fixed;
-    /* left: 0; */
-    right: 0;
-    bottom: 0;
-    top: auto;
-    width: 44%;
-    border-radius: 16px 16px 0 0;
-    padding: 20px 18px 24px;
-  }
 
-  .panel-header {
-    margin-bottom: 20px;
-  }
 
-  .panel-header h3 {
-    font-size: 17px;
-  }
 
-  .panel-row {
-    margin-bottom: 14px;
-  }
-
-  .panel-row .label {
-    min-width: 120px;
-    font-size: 12px;
-  }
-
-  .panel-row .value {
-    font-size: 14px;
-  }
-
-  .lang-selector {
-    justify-content: center;
-  }
-}
-
-@media (max-width: 425px) {
-  .image-container {
-    height: 100vh;
-  }
-
-  #layout-image {
-    object-fit: contain;
-  }
-
-  #svg-map {
-    width: 100%;
-    height: 100%;
-  }
-}
 
 /* =========================
    MOBILE INFO CONTAINER
@@ -1215,98 +1166,26 @@ new card code */
 /* ==============================
    MOBILE INFO PANEL – HARD RESET
    ============================== */
-@media (max-width: 480px) {
-  #mobile-info-slot {
-    display: block;
-    position: fixed;
-    top: 120px;
-    /* below compass */
-    right: 12px;
-    width: 46vw;
-    height: 52vh;
-    z-index: 2000;
-    pointer-events: auto;
-  }
 
-  .plot-info-panel {
-    position: relative !important;
-    display: block !important;
-    width: 100%;
-    height: 100%;
-    padding: 14px;
-    overflow-y: auto;
-
-    background: transparent;
-    /* black area already exists */
-    box-shadow: none !important;
-    transform: none !important;
-  }
-
-  /* 🔴 FORCE ALL CHILDREN VISIBLE */
-  .plot-info-panel *,
-  .panel-header,
-  .panel-row,
-  .label,
-  .value {
-    position: static !important;
-    display: block !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-  }
-}
 
 /* ==============================
    MOBILE INFO PANEL – FONT SCALE
    ============================== */
-@media (max-width: 480px) {
-  .plot-info-panel {
-    font-size: 12px;
-    /* base text */
-    line-height: 1.4;
-  }
 
-  .panel-header h3 {
-    font-size: 14px;
-    /* "PLOT DETAILS" */
-    letter-spacing: 1.5px;
-    margin-bottom: 10px;
-  }
-
-  .panel-row .label {
-    font-size: 10px;
-    /* headings like PLOT NUMBER */
-    letter-spacing: 1.2px;
-    margin-bottom: 2px;
-  }
-
-  .panel-row .value {
-    font-size: 13px;
-    /* values like 33, 500 s.ft */
-    font-weight: 600;
-  }
-
-  /* Audio & language buttons */
-  #audio-btn,
-  #lang-selector button {
-    font-size: 12px;
-    padding: 4px 6px;
-  }
-}
 
 /* =====================
    COMPARE BUTTONS
    ===================== */
 
 .compare-btn {
-  /* margin-top: 12px; */
   width: 100%;
-  padding: 8px;
+  padding: 0.58vw;
   background: #5b5a2f;
   color: #fff;
   border: none;
-  font-size: 13px;
+  font-size: 0.95vw;
   cursor: pointer;
-  border-radius: 4px;
+  border-radius: 0.29vw;
 }
 
 .compare-btn:disabled {
@@ -1316,29 +1195,24 @@ new card code */
 
 /* Floating view button */
 .view-compare-btn {
-  position: fixed;
-  bottom: 16px;
-  right: 16px;
-  padding: 10px 14px;
-  background: #2f5b3b;
+  width: 100%;
+  margin-top: 0.73vw;
+  padding: 0.58vw;
+  background: #5b5a2f;
   color: #fff;
   border: none;
-  font-size: 13px;
-  border-radius: 6px;
-  z-index: 3000;
+  font-size: 0.95vw;
+  cursor: pointer;
+  border-radius: 0.29vw;
 }
 
 .view-compare-btn:disabled {
-  opacity: 0.4;
+  background: #999;
   cursor: not-allowed;
 }
 
 /* Mobile tweak */
-@media (max-width: 480px) {
-  .compare-btn {
-    font-size: 12px;
-  }
-}
+
 
 /* =========================
    COMPARE MODAL
@@ -1423,32 +1297,31 @@ new card code */
 }
 
 /* Mobile */
-@media (max-width: 480px) {
-  .compare-dialog {
-    width: 94%;
-    margin: 4vh auto;
-  }
 
-  .compare-card {
-    font-size: 12px;
-  }
-}
 
 /* =========================
    FILTER MODAL
    ========================= */
 
+.bottom-left-compass {
+  position: absolute;
+  bottom: 4.4vh;
+  left: 2.9vw;
+  z-index: 2000;
+  pointer-events: none;
+  opacity: 0.85;
+}
+
 .filter-btn {
-  position: fixed;
-  bottom: 16px;
-  right: 185px;
-  padding: 10px 14px;
+  width: 100%;
+  margin-top: 0.73vw;
+  padding: 0.58vw;
   background: #5b5a2f;
   color: #fff;
   border: none;
-  font-size: 13px;
-  border-radius: 6px;
-  z-index: 3000;
+  font-size: 0.95vw;
+  cursor: pointer;
+  border-radius: 0.29vw;
 }
 
 .filter-modal {
@@ -1609,4 +1482,205 @@ new card code */
 
 .reset-compare-btn:hover {
   background: #e74c3c;
+}
+
+/* =============================================================
+   MOBILE LAYOUT — Stack: Map → Plot Details → Buttons
+   ============================================================= */
+@media screen and (max-width: 768px) {
+
+  html, body {
+    overflow: auto !important;
+    height: auto !important;
+  }
+
+  body {
+    overflow-y: auto !important;
+    height: auto !important;
+  }
+
+  .firsttop {
+    position: relative !important;
+    width: 100vw !important;
+    height: auto !important;
+    overflow: visible !important;
+    display: flex !important;
+    flex-direction: column !important;
+    background: #D5CFD1 !important;
+  }
+
+  /* ---- MAP ---- */
+  .image-container {
+    position: relative !important;
+    width: 100% !important;
+    height: 55vh !important;
+    min-height: 280px;
+    background-color: #D5CFD1 !important;
+    order: 1;
+  }
+
+  #layout-image {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;
+  }
+
+  #svg-map {
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  /* ---- COMPASS ---- */
+  .bottom-left-compass {
+    bottom: 10px !important;
+    left: 10px !important;
+  }
+
+  .bottom-left-compass svg {
+    width: 50px !important;
+    height: 88px !important;
+  }
+
+  /* ---- VIRTUAL LAYOUT LABEL ---- */
+  .virtual-layout-label,
+  #virtual-layout-label {
+    display: none !important;
+  }
+
+  /* ---- PLOT INFO PANEL ---- */
+  .plot-info-panel,
+  #plot-info-panel {
+    position: relative !important;
+    top: auto !important;
+    right: auto !important;
+    left: auto !important;
+    bottom: auto !important;
+    width: 100% !important;
+    padding: 20px 24px !important;
+    order: 2;
+    display: none;
+    box-sizing: border-box;
+  }
+
+  /* Plot Diagram (N/S/E/W box) */
+  .plot-diagram {
+    width: 50px !important;
+    height: 50px !important;
+    margin: 20px auto 20px auto !important;
+  }
+
+  .plot-box {
+    border-width: 2px !important;
+    border-radius: 6px !important;
+  }
+
+  .plot-label {
+    font-size: 12px !important;
+  }
+
+  .north { top: -24px !important; }
+  .south { bottom: -24px !important; }
+  .west { left: -45px !important; }
+  .east { right: -45px !important; }
+
+  /* Header */
+  .panel-header {
+    margin-bottom: 16px !important;
+  }
+
+  .panel-header h3 {
+    font-size: 18px !important;
+    letter-spacing: 1.5px !important;
+    border-bottom-width: 2px !important;
+    padding-bottom: 4px !important;
+  }
+
+  /* Rows */
+  .panel-row {
+    margin-bottom: 12px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+  }
+
+  .panel-row .label {
+    font-size: 12px !important;
+    letter-spacing: 1.5px !important;
+    min-width: auto !important;
+  }
+
+  .panel-row .value {
+    font-size: 14px !important;
+    min-width: auto !important;
+    text-align: right !important;
+    font-weight: 600;
+  }
+
+  .line {
+    height: 1px !important;
+    margin: 4px 16px !important;
+  }
+
+  /* Buttons */
+  .compare-btn,
+  .view-compare-btn,
+  .filter-btn {
+    font-size: 14px !important;
+    padding: 12px !important;
+    border-radius: 8px !important;
+    margin-top: 8px !important;
+    width: 100% !important;
+  }
+
+  .view-compare-btn {
+    margin-top: 8px !important;
+  }
+
+  /* ---- GREENSIRI LOGO ---- */
+  .greensiri-logo,
+  .logo-section {
+    order: 3;
+    text-align: center;
+    padding: 16px 0;
+  }
+
+  /* ---- CARD CONTAINER ---- */
+  .card-container {
+    position: relative !important;
+    width: 90% !important;
+    right: auto !important;
+    bottom: auto !important;
+    margin: 12px auto !important;
+    border-radius: 16px !important;
+    order: 4;
+  }
+
+  /* ---- MODALS (Compare / Filter) ---- */
+  .compare-dialog {
+    width: 95% !important;
+    max-height: 80vh !important;
+    margin: 5vh auto !important;
+  }
+
+  .filter-dialog {
+    width: 95% !important;
+    max-width: none !important;
+    margin: 5vh auto !important;
+  }
+
+  /* ---- MOBILE INFO SLOT (hide duplicate) ---- */
+  #mobile-info-slot {
+    display: none !important;
+  }
+
+  /* ---- LANG SELECTOR ---- */
+  .lang-selector {
+    gap: 8px !important;
+    margin-top: 12px !important;
+  }
+
+  .lang-selector button {
+    font-size: 12px !important;
+    padding: 6px 10px !important;
+  }
 }

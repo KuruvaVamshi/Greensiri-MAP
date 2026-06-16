@@ -10,7 +10,6 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Sofia" />
   <title>OPEN_PLOTS</title>
   <link rel="stylesheet" href="style.css" />
-  <link rel="stylesheet" href="responsive.css" />
 
   <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
   <style>
@@ -20,55 +19,55 @@
 
     .plot-diagram {
       position: relative;
-      width: 50px;
-      height: 50px;
-      margin: 40px auto 40px auto;
+      width: 3.66vw;
+      height: 3.66vw;
+      margin: 1.5vw auto 2.9vw 2vw;
     }
 
     .plot-box {
       width: 100%;
       height: 100%;
-      border: 2px solid #5b5a2f;
-      border-radius: 6px;
+      border: 0.15vw solid #5b5a2f;
+      border-radius: 0.44vw;
     }
 
     .plot-label {
       position: absolute;
       color: #5b5a2f;
-      font-size: 14px;
+      font-size: 1.02vw;
       font-weight: 200;
       white-space: nowrap;
     }
 
     .labell {
-      font-size: 14px;
-      letter-spacing: 2px;
+      font-size: 1.02vw;
+      letter-spacing: 0.15vw;
       position: relative;
       margin-top: 10%;
     }
 
     /* Positioning */
     .north {
-      top: -30px;
+      top: -2.2vw;
       left: 50%;
       transform: translateX(-50%);
     }
 
     .south {
-      bottom: -30px;
+      bottom: -2.2vw;
       left: 50%;
       transform: translateX(-50%);
     }
 
     .west {
-      left: -55px;
+      left: -4vw;
       top: 50%;
       transform: translateY(-50%);
       text-align: right;
     }
 
     .east {
-      right: -55px;
+      right: -4vw;
       top: 50%;
       transform: translateY(-50%);
       text-align: left;
@@ -82,6 +81,41 @@
       <img src="images/avalability tool ui.jpg" id="layout-image" alt="Layout" />
 
       <svg id="svg-map"></svg>
+      <div class="bottom-left-compass architectural-compass">
+        <svg style="width:7.5vw; height:13vh;" viewBox="0 0 70 130" xmlns="http://www.w3.org/2000/svg"
+          style="filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.1));">
+          <!-- N Letter -->
+          <text x="35" y="24" font-family="'Century Gothic', sans-serif" font-size="24" font-weight="bold"
+            fill="#3b3a1f" text-anchor="middle" letter-spacing="1">N</text>
+
+          <!-- Outer dashed ring -->
+          <circle cx="35" cy="80" r="26" fill="none" stroke="#5b5a2f" stroke-width="1.5" stroke-dasharray="3,3"
+            opacity="0.6" />
+
+          <!-- Inner solid ring -->
+          <circle cx="35" cy="80" r="18" fill="none" stroke="#5b5a2f" stroke-width="1.5" />
+
+          <!-- Left half of North arrow -->
+          <polygon points="35,32 24,80 35,80" fill="#5b5a2f" />
+
+          <!-- Right half of North arrow -->
+          <polygon points="35,32 46,80 35,80" fill="none" stroke="#5b5a2f" stroke-width="1.5" stroke-linejoin="round" />
+
+          <!-- Left half of South arrow (shorter) -->
+          <polygon points="35,115 28,80 35,80" fill="none" stroke="#5b5a2f" stroke-width="1.5"
+            stroke-linejoin="round" />
+
+          <!-- Right half of South arrow -->
+          <polygon points="35,115 42,80 35,80" fill="#5b5a2f" opacity="0.7" />
+
+          <!-- East/West markers -->
+          <line x1="6" y1="80" x2="15" y2="80" stroke="#5b5a2f" stroke-width="2" />
+          <line x1="55" y1="80" x2="64" y2="80" stroke="#5b5a2f" stroke-width="2" />
+
+          <!-- Center Dot -->
+          <circle cx="35" cy="80" r="3" fill="#ffffff" stroke="#5b5a2f" stroke-width="1.5" />
+        </svg>
+      </div>
     </div>
 
     <div id="plot-info-panel" class="plot-info-panel">
@@ -118,14 +152,14 @@
         <span id="compare-count">0</span>
         )
       </button>
+      <button id="view-compare-btn" class="view-compare-btn" disabled>View Compared Plots</button>
+      <button id="filter-btn" class="filter-btn">Filter</button>
     </div>
-    <button id="view-compare-btn" class="view-compare-btn" disabled>View Compared Plots</button>
 
     <!-- filter options -->
     <!-- =========================
      FILTER MODAL
      ========================= -->
-    <button id="filter-btn" class="filter-btn">Filter</button>
     <div id="filter-modal">
       <div class="filter-overlay"></div>
 
@@ -163,16 +197,6 @@
               <option value="waterstream">Water Stream</option>
               <option value="corner waterstream">Corner Water Stream</option>
               <option value="special_package">Special Package</option>
-            </select>
-          </div>
-
-          <!-- Amenities -->
-          <div class="filter-group">
-            <label>Amenities</label>
-            <select id="filter-amenities">
-              <option value="">All</option>
-              <option value="park">Park</option>
-              <option value="clubhouse">Clubhouse</option>
             </select>
           </div>
 

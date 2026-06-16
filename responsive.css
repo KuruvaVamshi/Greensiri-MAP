@@ -630,21 +630,23 @@
         height: 100% !important;
     }
 
+    .bottom-left-compass {
+        bottom: 15px !important;
+        left: 15px !important;
+        transform: scale(0.65) !important;
+        transform-origin: bottom left !important;
+    }
+
     /* Vertical "VIRTUAL LAYOUT" label */
 
 
     /* 3. BUTTONS AT BOTTOM */
     .filter-btn,
     .view-compare-btn {
-        position: relative !important;
-        bottom: 220px !important;
         height: 40px;
-        right: auto !important;
-        left: auto !important;
         width: 85% !important;
         margin: 10px auto !important;
         display: block !important;
-        order: 3 !important;
         padding: 15px !important;
         text-align: center !important;
         border-radius: 12px !important;
@@ -661,16 +663,11 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        position: relative !important;
-        bottom: 70px !important;
         height: 40px;
-        right: auto !important;
-        left: auto !important;
         width: 95% !important;
         margin: 10px auto !important;
         display: block !important;
         white-space: nowrap;
-        order: 3 !important;
         padding: 10px !important;
         text-align: center !important;
         border-radius: 12px !important;

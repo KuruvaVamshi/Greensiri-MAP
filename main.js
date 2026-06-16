@@ -206,6 +206,14 @@ function renderPlotSizesInContainer(sizesStr, container) {
     return;
   }
 
+  // Clean up formatting issues from the data source
+  sizesStr = sizesStr.replace(/[\r\n]+/g, " "); // Remove newlines
+  sizesStr = sizesStr.replace(/([NSEW])\s+[-=]/gi, "$1-"); // Fix "N -", "E ="
+  sizesStr = sizesStr.replace(/([NSEW])-\s+/gi, "$1-"); // Fix "N- ", "S- "
+  sizesStr = sizesStr.replace(/E=/gi, "E-"); // Fix "E="
+  sizesStr = sizesStr.replace(/N-103\s+103/gi, "N-103 S-103"); // Fix Plot 21
+  sizesStr = sizesStr.replace(/([0-9]+)([A-Za-z]+)/g, "$1 $2"); // Fix merged text like "S-80CORNER"
+
   // Handle 'x', ',', and spaces as separators
   let parts = sizesStr.split(/[x,\s]+/).map((s) => s.trim()).filter(s => s !== "");
 
