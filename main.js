@@ -82,15 +82,19 @@ async function loadExcelData() {
 const img = document.getElementById("layout-image");
 const svg = document.getElementById("svg-map");
 
-img.addEventListener("load", () => {
-  const w = img.naturalWidth;
-  const h = img.naturalHeight;
+function setupSvg() {
+  if (img.naturalWidth && img.naturalHeight) {
+    svg.setAttribute("viewBox", `0 0 ${img.naturalWidth} ${img.naturalHeight}`);
+    svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
+    drawPolygons();
+  }
+}
 
-  svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
-  svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
-
-  drawPolygons();
-});
+if (img.complete) {
+  setupSvg();
+} else {
+  img.addEventListener("load", setupSvg);
+}
 
 function drawPolygons() {
   svgContainer.innerHTML = "";
@@ -183,6 +187,12 @@ function updatePlotInfoPanel(plotData) {
   const panels = document.querySelectorAll(".plot-info-panel");
 
   panels.forEach((p) => (p.style.display = "block"));
+
+  const detailsContent = document.getElementById("plot-details-content");
+  if (detailsContent) {
+    detailsContent.style.visibility = "visible";
+    detailsContent.style.display = "block";
+  }
 
   plotNumberEls.forEach((el) => (el.innerText = plotData.data.plotNumber || "—"));
   areaEls.forEach((el) => (el.innerText = plotData.data.area || "—"));

@@ -22,6 +22,8 @@
       width: 3.66vw;
       height: 3.66vw;
       margin: 1.5vw auto 2.9vw 2vw;
+      left: 14vw;
+      top: 2.5vw;
     }
 
     .plot-box {
@@ -119,40 +121,42 @@
     </div>
 
     <div id="plot-info-panel" class="plot-info-panel">
-      <div class="plot-diagram panel-row plot-size-row info-sizes" id="info-sizes"></div>
-      <div class="panel-header">
-        <h3>PLOT DETAILS</h3>
-      </div>
-      <span class="line"></span>
-      <div class="panel-row">
-        <span class="label">PLOT NUMBER</span>
-        <span class="value info-plot-number" id="info-plot-number">—</span>
-      </div>
-      <span class="line"></span>
-      <div class="panel-row">
-        <span class="label">PLOT AREA</span>
+      <div id="plot-details-content">
+        <div class="plot-diagram panel-row plot-size-row info-sizes" id="info-sizes"></div>
+        <div class="panel-header">
+          <h3>PLOT DETAILS</h3>
+        </div>
+        <span class="line"></span>
+        <div class="panel-row">
+          <span class="label">PLOT NUMBER</span>
+          <span class="value info-plot-number" id="info-plot-number">—</span>
+        </div>
+        <span class="line"></span>
+        <div class="panel-row">
+          <span class="label">PLOT AREA</span>
 
-        <span class="value info-area" id="info-area">—</span>
-      </div>
-      <span class="line"></span>
-      <div class="panel-row">
-        <span class="label">PLOT ORIENTATION</span>
+          <span class="value info-area" id="info-area">—</span>
+        </div>
+        <span class="line"></span>
+        <div class="panel-row">
+          <span class="label">PLOT ORIENTATION</span>
 
-        <span class="value info-facing" id="info-facing">—</span>
-      </div>
-      <span class="line"></span>
+          <span class="value info-facing" id="info-facing">—</span>
+        </div>
+        <span class="line"></span>
 
-      <div class="panel-row">
-        <span class="label">PLOT TYPE</span>
-        <span class="value info-type" id="info-type">—</span>
-      </div>
+        <div class="panel-row">
+          <span class="label">PLOT TYPE</span>
+          <span class="value info-type" id="info-type">—</span>
+        </div>
 
-      <button id="add-compare-btn" class="compare-btn">
-        Add to Compare (
-        <span id="compare-count">0</span>
-        )
-      </button>
-      <button id="view-compare-btn" class="view-compare-btn" disabled>View Compared Plots</button>
+        <button id="add-compare-btn" class="compare-btn">
+          Add to Compare (
+          <span id="compare-count">0</span>
+          )
+        </button>
+        <button id="view-compare-btn" class="view-compare-btn" disabled>View Compared Plots</button>
+      </div>
       <button id="filter-btn" class="filter-btn">Filter</button>
     </div>
 

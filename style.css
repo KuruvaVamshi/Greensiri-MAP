@@ -1071,8 +1071,17 @@ new card code */
   padding: 1.9vw 2vw;
   font-family: "Century Gothic", sans-serif;
   color: #5b5a2f;
-  display: none;
   z-index: 1000;
+}
+
+#plot-details-content {
+  visibility: hidden;
+}
+
+@media screen and (max-width: 850px) {
+  #plot-details-content {
+    display: none;
+  }
 }
 
 /* Header */
@@ -1306,7 +1315,7 @@ new card code */
 .bottom-left-compass {
   position: absolute;
   bottom: 4.4vh;
-  left: 2.9vw;
+  left: 21vw;
   z-index: 2000;
   pointer-events: none;
   opacity: 0.85;
@@ -1489,7 +1498,8 @@ new card code */
    ============================================================= */
 @media screen and (max-width: 768px) {
 
-  html, body {
+  html,
+  body {
     overflow: auto !important;
     height: auto !important;
   }
@@ -1578,10 +1588,21 @@ new card code */
     font-size: 12px !important;
   }
 
-  .north { top: -24px !important; }
-  .south { bottom: -24px !important; }
-  .west { left: -45px !important; }
-  .east { right: -45px !important; }
+  .north {
+    top: -24px !important;
+  }
+
+  .south {
+    bottom: -24px !important;
+  }
+
+  .west {
+    left: -45px !important;
+  }
+
+  .east {
+    right: -45px !important;
+  }
 
   /* Header */
   .panel-header {
