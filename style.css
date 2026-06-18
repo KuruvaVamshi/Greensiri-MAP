@@ -1232,24 +1232,29 @@ new card code */
   position: fixed;
   inset: 0;
   z-index: 5000;
+  align-items: center;
+  justify-content: center;
 }
 
 .compare-overlay {
   position: absolute;
   inset: 0;
   background: rgba(0, 0, 0, 0.45);
+  z-index: 1;
 }
 
 .compare-dialog {
   position: relative;
+  z-index: 2;
   background: #f0ebe8;
   width: 90%;
   max-width: 900px;
   max-height: 85vh;
-  margin: 6vh auto;
+  margin: 0 auto;
   border-radius: 10px;
   display: flex;
   flex-direction: column;
+  pointer-events: auto;
 }
 
 .compare-header {
